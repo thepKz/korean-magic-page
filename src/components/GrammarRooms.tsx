@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, BookOpen, Save, Volume2, ChevronLeft, ChevronRight, Target, Shuffle, Edit3 } from 'lucide-react';
+import { ArrowLeft, BookOpen, Save, Volume2, ChevronLeft, ChevronRight, Target, Shuffle, Edit3, Trophy, Clock, Star, CheckCircle, XCircle, RotateCcw, Zap, Brain, GamepadIcon } from 'lucide-react';
 import { GrammarLevel, GrammarPoint } from '../types/grammar';
 
 interface GrammarRoomsProps {
@@ -8,6 +8,17 @@ interface GrammarRoomsProps {
   onBack: () => void;
   onSaveGrammar: (grammar: GrammarPoint) => void;
   onOpenNotebook: () => void;
+}
+
+type QuizType = 'translation' | 'fill-blank' | 'multiple-choice' | 'sentence-order' | 'grammar-match' | 'usage-context';
+
+interface QuizQuestion {
+  type: QuizType;
+  question: string;
+  options?: string[];
+  correctAnswer: string;
+  explanation: string;
+  grammarPoint: string;
 }
 
 const GrammarRooms: React.FC<GrammarRoomsProps> = ({ 
@@ -23,8 +34,15 @@ const GrammarRooms: React.FC<GrammarRoomsProps> = ({
   const [showQuiz, setShowQuiz] = useState(false);
   const [quizAnswer, setQuizAnswer] = useState('');
   const [quizResult, setQuizResult] = useState<'correct' | 'incorrect' | null>(null);
+  const [currentQuiz, setCurrentQuiz] = useState<QuizQuestion | null>(null);
+  const [quizScore, setQuizScore] = useState({ correct: 0, total: 0 });
+  const [quizStreak, setQuizStreak] = useState(0);
+  const [timeLeft, setTimeLeft] = useState(30);
+  const [isTimerActive, setIsTimerActive] = useState(false);
+  const [showQuizResults, setShowQuizResults] = useState(false);
+  const [selectedQuizType, setSelectedQuizType] = useState<QuizType>('translation');
 
-  // Complete TOPIK 3 grammar data
+  // Complete TOPIK 3 grammar data with enhanced examples
   const grammarData: Record<GrammarLevel, GrammarPoint[]> = {
     beginner: [
       {
@@ -37,6 +55,11 @@ const GrammarRooms: React.FC<GrammarRoomsProps> = ({
             korean: '저는 학생이에요.',
             english: 'I am a student.',
             romanization: 'Jeoneun haksaeng-ieyo.'
+          },
+          {
+            korean: '이것은 책이 아니에요.',
+            english: 'This is not a book.',
+            romanization: 'Igeoseun chaegi anieyo.'
           }
         ],
         usage: 'Used to state what something is or is not',
@@ -52,6 +75,11 @@ const GrammarRooms: React.FC<GrammarRoomsProps> = ({
             korean: '시간이 있어요.',
             english: 'I have time.',
             romanization: 'Sigani isseoyo.'
+          },
+          {
+            korean: '돈이 없어요.',
+            english: 'I don\'t have money.',
+            romanization: 'Doni eopseoyo.'
           }
         ],
         usage: 'Used to express existence or possession',
@@ -69,6 +97,11 @@ const GrammarRooms: React.FC<GrammarRoomsProps> = ({
             korean: '오빠밖에 사랑하지 않아요.',
             english: 'I only love my older brother.',
             romanization: 'Oppabakke saranghaji anayo.'
+          },
+          {
+            korean: '물밖에 마시지 않아요.',
+            english: 'I only drink water.',
+            romanization: 'Mulbakke masiji anayo.'
           }
         ],
         usage: 'Used to express "only" or "nothing but" with negative verbs',
@@ -84,6 +117,11 @@ const GrammarRooms: React.FC<GrammarRoomsProps> = ({
             korean: '한국어를 베트남말로 띠엔 한이라고 해요.',
             english: 'Korean is called "Tieng Han" in Vietnamese.',
             romanization: 'Hangugeoreul beteunamallo ttien hanirago haeyo.'
+          },
+          {
+            korean: '이 음식을 김치라고 해요.',
+            english: 'This food is called kimchi.',
+            romanization: 'I eumsigeul gimchirago haeyo.'
           }
         ],
         usage: 'Used to say what something is called or to quote what someone said',
@@ -99,6 +137,11 @@ const GrammarRooms: React.FC<GrammarRoomsProps> = ({
             korean: '이번 학기에 장학금을 받게 되었어요.',
             english: 'I came to receive a scholarship this semester.',
             romanization: 'Ibeon hakgie janghakgeumeul batge doeeosseoyo.'
+          },
+          {
+            korean: '한국어를 잘하게 되었어요.',
+            english: 'I came to speak Korean well.',
+            romanization: 'Hangugeoreul jalhage doeeosseoyo.'
           }
         ],
         usage: 'Used to express a change in situation or state that happened naturally',
@@ -114,6 +157,11 @@ const GrammarRooms: React.FC<GrammarRoomsProps> = ({
             korean: '유학할 생각이에요.',
             english: 'I plan to study abroad.',
             romanization: 'Yuhakhal saenggagieyo.'
+          },
+          {
+            korean: '내년에 결혼할 생각이에요.',
+            english: 'I plan to get married next year.',
+            romanization: 'Naenyeone gyeolhonhal saenggagieyo.'
           }
         ],
         usage: 'Used to express plans or intentions',
@@ -129,6 +177,11 @@ const GrammarRooms: React.FC<GrammarRoomsProps> = ({
             korean: '밥을 먹으러 가는 길이에요.',
             english: 'I\'m on my way to eat.',
             romanization: 'Babeul meogeuro ganeun girieyo.'
+          },
+          {
+            korean: '집에 가는 길에 친구를 만났어요.',
+            english: 'I met a friend on the way home.',
+            romanization: 'Jibe ganeun gire chingureul mannasseoyo.'
           }
         ],
         usage: 'Used to express being on the way to do something',
@@ -144,6 +197,11 @@ const GrammarRooms: React.FC<GrammarRoomsProps> = ({
             korean: '열심히 공부한 덕분에 한국어 실력이 좋아졌어요.',
             english: 'Thanks to studying hard, my Korean skills improved.',
             romanization: 'Yeolsimhi gongbuhan deokbune hangugeo sillyeogi joajyeosseoyo.'
+          },
+          {
+            korean: '선생님 덕분에 시험에 합격했어요.',
+            english: 'Thanks to my teacher, I passed the exam.',
+            romanization: 'Seonsaengnim deokbune siheome hapgyeokhaesseoyo.'
           }
         ],
         usage: 'Used to express gratitude or positive causation',
@@ -156,9 +214,14 @@ const GrammarRooms: React.FC<GrammarRoomsProps> = ({
         structure: 'Verb + 나요? / Adjective + (으)ㄴ가요?',
         examples: [
           {
-            korean: '운동하나요? 바쁜가요? 의사인가요?',
-            english: 'Do you exercise? Are you busy? Are you a doctor?',
-            romanization: 'Undonghanayor? Bappeungayo? Uisaingayo?'
+            korean: '운동하나요?',
+            english: 'Do you exercise?',
+            romanization: 'Undonghanayor?'
+          },
+          {
+            korean: '바쁜가요?',
+            english: 'Are you busy?',
+            romanization: 'Bappeungayo?'
           }
         ],
         usage: 'Polite and respectful way to ask questions',
@@ -174,6 +237,11 @@ const GrammarRooms: React.FC<GrammarRoomsProps> = ({
             korean: '일찍 자는 게 좋겠어요.',
             english: 'It would be better to sleep early.',
             romanization: 'Iljjik janeun ge jokesseoyo.'
+          },
+          {
+            korean: '미리 준비하는 게 좋아요.',
+            english: 'It\'s better to prepare in advance.',
+            romanization: 'Miri junbihaneun ge joayo.'
           }
         ],
         usage: 'Used to give advice or express what would be better',
@@ -189,6 +257,11 @@ const GrammarRooms: React.FC<GrammarRoomsProps> = ({
             korean: '요즘 날씬해 보여요.',
             english: 'You look slim these days.',
             romanization: 'Yojeum nalssinhae boyeoyo.'
+          },
+          {
+            korean: '피곤해 보여요.',
+            english: 'You look tired.',
+            romanization: 'Pigonhae boyeoyo.'
           }
         ],
         usage: 'Used to express how something appears or looks',
@@ -204,235 +277,14 @@ const GrammarRooms: React.FC<GrammarRoomsProps> = ({
             korean: '한국어가 어려운 것 같아요.',
             english: 'Korean seems difficult.',
             romanization: 'Hangugeoga eoryeoun geot gatayo.'
+          },
+          {
+            korean: '비가 올 것 같아요.',
+            english: 'It seems like it will rain.',
+            romanization: 'Biga ol geot gatayo.'
           }
         ],
         usage: 'Used to express assumption or probability',
-        level: 'intermediate'
-      },
-      {
-        id: 'int-11',
-        korean: 'V는/A(으)ㄴ N 대신(에)',
-        english: 'Instead of',
-        structure: 'Verb/Adjective + N + 대신(에)',
-        examples: [
-          {
-            korean: '밥 대신 쌀국수를 먹읍시다.',
-            english: 'Let\'s eat rice noodles instead of rice.',
-            romanization: 'Bap daesin ssalguksureul meogeupsida.'
-          }
-        ],
-        usage: 'Used to express substitution or replacement',
-        level: 'intermediate'
-      },
-      {
-        id: 'int-12',
-        korean: 'V/A기는 하다',
-        english: 'It is true that... but',
-        structure: 'Verb/Adjective + 기는 하다',
-        examples: [
-          {
-            korean: '예쁘기는 하지만 비싸요.',
-            english: 'It is pretty, but it\'s expensive.',
-            romanization: 'Yeppeugineun hajiman bissayo.'
-          }
-        ],
-        usage: 'Used to acknowledge something while introducing a contrasting point',
-        level: 'intermediate'
-      },
-      {
-        id: 'int-13',
-        korean: 'V고 나서',
-        english: 'After doing',
-        structure: 'Verb stem + 고 나서',
-        examples: [
-          {
-            korean: '고기를 썰고 나서 볶아요.',
-            english: 'After cutting the meat, stir-fry it.',
-            romanization: 'Gogireul sseolgo naseo bokkayo.'
-          }
-        ],
-        usage: 'Used to express sequence of actions',
-        level: 'intermediate'
-      },
-      {
-        id: 'int-14',
-        korean: '(으)로',
-        english: 'With / By means of',
-        structure: 'Noun + (으)로',
-        examples: [
-          {
-            korean: '삼계탕은 닭고기와 인삼으로 만들어요.',
-            english: 'Samgyetang is made with chicken and ginseng.',
-            romanization: 'Samgyetangeun dakgogiwa insameullo mandeureoyo.'
-          }
-        ],
-        usage: 'Used to express means, method, or material',
-        level: 'intermediate'
-      },
-      {
-        id: 'int-15',
-        korean: 'V다가',
-        english: 'While doing... then',
-        structure: 'Verb stem + 다가',
-        examples: [
-          {
-            korean: '자다가 전화가 왔어요.',
-            english: 'While sleeping, a phone call came.',
-            romanization: 'Jadaga jeonhwaga wasseoyo.'
-          }
-        ],
-        usage: 'Used to express interruption of an ongoing action',
-        level: 'intermediate'
-      },
-      {
-        id: 'int-16',
-        korean: 'A게 + V',
-        english: 'In a ... manner',
-        structure: 'Adjective stem + 게 + Verb',
-        examples: [
-          {
-            korean: '맛있게 먹다, 예쁘게 입다',
-            english: 'To eat deliciously, to dress prettily',
-            romanization: 'Masitge meokda, yeppeuge ipda'
-          }
-        ],
-        usage: 'Used to express manner or way of doing something',
-        level: 'intermediate'
-      },
-      {
-        id: 'int-17',
-        korean: 'V기 쉽다',
-        english: 'Easy to do',
-        structure: 'Verb stem + 기 쉽다',
-        examples: [
-          {
-            korean: '비밀번호는 잊어버리기 쉬우니까 메모하세요.',
-            english: 'Passwords are easy to forget, so write them down.',
-            romanization: 'Bimilbeonhoneun ijeobeoigi swiunikka memohaseyo.'
-          }
-        ],
-        usage: 'Used to express that something is easy to do',
-        level: 'intermediate'
-      },
-      {
-        id: 'int-18',
-        korean: 'V는 동안',
-        english: 'While / During',
-        structure: 'Verb stem + 는 동안',
-        examples: [
-          {
-            korean: '서울에 사는 동안 광화문에 가 봤어요.',
-            english: 'While living in Seoul, I went to Gwanghwamun.',
-            romanization: 'Seoure saneun dongan gwanghwamune ga bwasseoyo.'
-          }
-        ],
-        usage: 'Used to express duration or simultaneous actions',
-        level: 'intermediate'
-      },
-      {
-        id: 'int-19',
-        korean: 'V(으)려면',
-        english: 'If you want to / In order to',
-        structure: 'Verb stem + (으)려면',
-        examples: [
-          {
-            korean: '환불하려면 사용하지 마세요.',
-            english: 'If you want a refund, don\'t use it.',
-            romanization: 'Hwanbulharyeomyeon sayonghaji maseyo.'
-          }
-        ],
-        usage: 'Used to express conditions for achieving a goal',
-        level: 'intermediate'
-      },
-      {
-        id: 'int-20',
-        korean: 'N처럼',
-        english: 'Like / As',
-        structure: 'Noun + 처럼',
-        examples: [
-          {
-            korean: '가수처럼 노래 잘하고 싶어요.',
-            english: 'I want to sing well like a singer.',
-            romanization: 'Gasucheoreom norae jalhago sipeoyo.'
-          }
-        ],
-        usage: 'Used to make comparisons or express similarity',
-        level: 'intermediate'
-      },
-      // Adding more TOPIK 3 grammar points
-      {
-        id: 'int-21',
-        korean: 'V는군요/A군요',
-        english: 'Oh, I see / So that\'s how it is',
-        structure: 'Verb/Adjective + 군요',
-        examples: [
-          {
-            korean: '잘 준비하는군요.',
-            english: 'Oh, I see you\'re preparing well.',
-            romanization: 'Jal junbihaneun-gunyo.'
-          }
-        ],
-        usage: 'Used to express realization or discovery',
-        level: 'intermediate'
-      },
-      {
-        id: 'int-22',
-        korean: 'V는/A(으)ㄴ 편이다',
-        english: 'To be on the ... side / Rather',
-        structure: 'Verb/Adjective + 편이다',
-        examples: [
-          {
-            korean: '말이 많고 적극적인 편이에요.',
-            english: 'I\'m rather talkative and active.',
-            romanization: 'Mari manko jeokgeukjeogin pyeonieyo.'
-          }
-        ],
-        usage: 'Used to express tendency or general characteristic',
-        level: 'intermediate'
-      },
-      {
-        id: 'int-23',
-        korean: 'V는 바람에',
-        english: 'Because of / Due to',
-        structure: 'Verb stem + 는 바람에',
-        examples: [
-          {
-            korean: '늦게 일어나는 바람에 버스를 놓쳤어요.',
-            english: 'I missed the bus because I woke up late.',
-            romanization: 'Neutge ireonaneun barame beoseureul nochyeosseoyo.'
-          }
-        ],
-        usage: 'Used to express an unintended negative result',
-        level: 'intermediate'
-      },
-      {
-        id: 'int-24',
-        korean: 'V는 중에/중이다',
-        english: 'In the middle of / During',
-        structure: 'Verb stem + 는 중에/중이다',
-        examples: [
-          {
-            korean: '시험 보는 중에 전화가 왔어요.',
-            english: 'A phone call came during the exam.',
-            romanization: 'Siheom boneun junge jeonhwaga wasseoyo.'
-          }
-        ],
-        usage: 'Used to express ongoing action or state',
-        level: 'intermediate'
-      },
-      {
-        id: 'int-25',
-        korean: 'V도록 하다',
-        english: 'To make sure to / To see to it that',
-        structure: 'Verb stem + 도록 하다',
-        examples: [
-          {
-            korean: '내일 늦지 않도록 하겠어요.',
-            english: 'I\'ll make sure not to be late tomorrow.',
-            romanization: 'Naeil neutji andorok hagesseoyo.'
-          }
-        ],
-        usage: 'Used to express intention or determination',
         level: 'intermediate'
       }
     ],
@@ -457,11 +309,97 @@ const GrammarRooms: React.FC<GrammarRoomsProps> = ({
 
   const currentGrammarPoints = grammarData[level];
 
+  // Enhanced Quiz Questions for TOPIK 3
+  const generateQuizQuestions = (grammar: GrammarPoint): QuizQuestion[] => {
+    const questions: QuizQuestion[] = [];
+
+    // Translation Quiz
+    questions.push({
+      type: 'translation',
+      question: `Translate to Korean: "${grammar.examples[0].english}"`,
+      correctAnswer: grammar.examples[0].korean,
+      explanation: `The correct answer uses the grammar pattern: ${grammar.structure}`,
+      grammarPoint: grammar.korean
+    });
+
+    // Fill in the blank
+    const sentence = grammar.examples[0].korean;
+    const grammarPart = grammar.korean.split('/')[0];
+    const blankSentence = sentence.replace(new RegExp(grammarPart, 'g'), '____');
+    
+    questions.push({
+      type: 'fill-blank',
+      question: `Fill in the blank: ${blankSentence}`,
+      correctAnswer: grammarPart,
+      explanation: `This sentence uses "${grammar.korean}" which means "${grammar.english}"`,
+      grammarPoint: grammar.korean
+    });
+
+    // Multiple Choice
+    const wrongOptions = [
+      '에서', '부터', '까지', '처럼', '같이', '마다', '조차', '만큼', '보다', '대신'
+    ].filter(opt => !grammar.korean.includes(opt)).slice(0, 3);
+    
+    questions.push({
+      type: 'multiple-choice',
+      question: `Which grammar pattern means "${grammar.english}"?`,
+      options: [grammar.korean, ...wrongOptions].sort(() => Math.random() - 0.5),
+      correctAnswer: grammar.korean,
+      explanation: `"${grammar.korean}" is used ${grammar.usage.toLowerCase()}`,
+      grammarPoint: grammar.korean
+    });
+
+    // Usage Context
+    questions.push({
+      type: 'usage-context',
+      question: `When do you use "${grammar.korean}"?`,
+      options: [
+        grammar.usage,
+        'To express past actions',
+        'To show location',
+        'To indicate time'
+      ].sort(() => Math.random() - 0.5),
+      correctAnswer: grammar.usage,
+      explanation: `"${grammar.korean}" is specifically used ${grammar.usage.toLowerCase()}`,
+      grammarPoint: grammar.korean
+    });
+
+    // Grammar Match
+    questions.push({
+      type: 'grammar-match',
+      question: `What does "${grammar.korean}" mean in English?`,
+      options: [
+        grammar.english,
+        'To express ability',
+        'To show direction',
+        'To indicate possession'
+      ].sort(() => Math.random() - 0.5),
+      correctAnswer: grammar.english,
+      explanation: `"${grammar.korean}" translates to "${grammar.english}"`,
+      grammarPoint: grammar.korean
+    });
+
+    return questions;
+  };
+
   const levelInfo = {
     beginner: { korean: '초급', english: 'Beginner' },
     intermediate: { korean: '중급', english: 'Intermediate' },
     advanced: { korean: '고급', english: 'Advanced' }
   };
+
+  // Timer effect
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (isTimerActive && timeLeft > 0) {
+      interval = setInterval(() => {
+        setTimeLeft(timeLeft - 1);
+      }, 1000);
+    } else if (timeLeft === 0) {
+      handleQuizTimeout();
+    }
+    return () => clearInterval(interval);
+  }, [isTimerActive, timeLeft]);
 
   const handleGrammarSelect = (grammar: GrammarPoint) => {
     setSelectedGrammar(grammar);
@@ -469,6 +407,7 @@ const GrammarRooms: React.FC<GrammarRoomsProps> = ({
     setShowQuiz(false);
     setQuizResult(null);
     setQuizAnswer('');
+    setCurrentQuiz(null);
   };
 
   const handleSave = (grammar: GrammarPoint) => {
@@ -501,30 +440,96 @@ const GrammarRooms: React.FC<GrammarRoomsProps> = ({
     }
   };
 
-  const startQuiz = () => {
+  const startQuiz = (quizType: QuizType = 'translation') => {
+    if (!selectedGrammar) return;
+    
+    const questions = generateQuizQuestions(selectedGrammar);
+    const questionOfType = questions.find(q => q.type === quizType) || questions[0];
+    
+    setCurrentQuiz(questionOfType);
+    setSelectedQuizType(quizType);
     setShowQuiz(true);
     setQuizAnswer('');
     setQuizResult(null);
+    setTimeLeft(30);
+    setIsTimerActive(true);
   };
 
   const checkQuizAnswer = () => {
-    if (!selectedGrammar) return;
+    if (!currentQuiz) return;
     
-    const correctAnswer = selectedGrammar.examples[currentExample].korean;
-    const isCorrect = quizAnswer.trim().toLowerCase() === correctAnswer.toLowerCase();
+    setIsTimerActive(false);
+    const isCorrect = quizAnswer.trim().toLowerCase() === currentQuiz.correctAnswer.toLowerCase();
     
     setQuizResult(isCorrect ? 'correct' : 'incorrect');
+    setQuizScore(prev => ({
+      correct: prev.correct + (isCorrect ? 1 : 0),
+      total: prev.total + 1
+    }));
+    
+    if (isCorrect) {
+      setQuizStreak(prev => prev + 1);
+    } else {
+      setQuizStreak(0);
+    }
     
     setTimeout(() => {
       setQuizResult(null);
       setQuizAnswer('');
       setShowQuiz(false);
+      setCurrentQuiz(null);
+    }, 3000);
+  };
+
+  const handleQuizTimeout = () => {
+    setIsTimerActive(false);
+    setQuizResult('incorrect');
+    setQuizScore(prev => ({
+      correct: prev.correct,
+      total: prev.total + 1
+    }));
+    setQuizStreak(0);
+    
+    setTimeout(() => {
+      setQuizResult(null);
+      setQuizAnswer('');
+      setShowQuiz(false);
+      setCurrentQuiz(null);
     }, 2000);
   };
 
   const getRandomGrammar = () => {
     const randomIndex = Math.floor(Math.random() * currentGrammarPoints.length);
     handleGrammarSelect(currentGrammarPoints[randomIndex]);
+  };
+
+  const resetQuizStats = () => {
+    setQuizScore({ correct: 0, total: 0 });
+    setQuizStreak(0);
+  };
+
+  const getQuizTypeIcon = (type: QuizType) => {
+    switch (type) {
+      case 'translation': return <Target className="w-4 h-4" />;
+      case 'fill-blank': return <Edit3 className="w-4 h-4" />;
+      case 'multiple-choice': return <CheckCircle className="w-4 h-4" />;
+      case 'sentence-order': return <Shuffle className="w-4 h-4" />;
+      case 'grammar-match': return <Brain className="w-4 h-4" />;
+      case 'usage-context': return <GamepadIcon className="w-4 h-4" />;
+      default: return <Target className="w-4 h-4" />;
+    }
+  };
+
+  const getQuizTypeName = (type: QuizType) => {
+    switch (type) {
+      case 'translation': return '번역';
+      case 'fill-blank': return '빈칸';
+      case 'multiple-choice': return '선택';
+      case 'sentence-order': return '순서';
+      case 'grammar-match': return '매칭';
+      case 'usage-context': return '용법';
+      default: return '퀴즈';
+    }
   };
 
   return (
@@ -557,6 +562,22 @@ const GrammarRooms: React.FC<GrammarRoomsProps> = ({
         </div>
 
         <div className="flex items-center gap-3">
+          {/* Quiz Stats */}
+          {quizScore.total > 0 && (
+            <div className="flex items-center gap-2 bg-emerald-500/10 backdrop-blur-sm px-3 py-2 rounded-lg border border-emerald-400/20">
+              <Trophy className="w-4 h-4 text-emerald-400" />
+              <span className="text-emerald-300 text-sm">
+                {quizScore.correct}/{quizScore.total}
+              </span>
+              {quizStreak > 0 && (
+                <div className="flex items-center gap-1">
+                  <Zap className="w-3 h-3 text-yellow-400" />
+                  <span className="text-yellow-300 text-xs">{quizStreak}</span>
+                </div>
+              )}
+            </div>
+          )}
+          
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -715,18 +736,27 @@ const GrammarRooms: React.FC<GrammarRoomsProps> = ({
                   </AnimatePresence>
                 </div>
 
-                {/* Interactive Features */}
+                {/* Enhanced Quiz Section */}
+                <div className="mb-8">
+                  <h3 className="korean-text text-white font-medium mb-4">퀴즈 모드</h3>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                    {(['translation', 'fill-blank', 'multiple-choice', 'grammar-match', 'usage-context'] as QuizType[]).map((quizType) => (
+                      <motion.button
+                        key={quizType}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => startQuiz(quizType)}
+                        className="flex items-center gap-2 bg-blue-500/10 hover:bg-blue-500/20 px-3 py-2 rounded-lg border border-blue-400/20 text-blue-300 transition-colors text-sm"
+                      >
+                        {getQuizTypeIcon(quizType)}
+                        <span className="korean-text">{getQuizTypeName(quizType)}</span>
+                      </motion.button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Other Interactive Features */}
                 <div className="flex flex-wrap gap-3">
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={startQuiz}
-                    className="flex items-center gap-2 bg-blue-500/10 hover:bg-blue-500/20 px-4 py-2 rounded-lg border border-blue-400/20 text-blue-300 transition-colors"
-                  >
-                    <Target className="w-4 h-4" />
-                    <span className="korean-text">퀴즈</span>
-                  </motion.button>
-                  
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
@@ -744,41 +774,90 @@ const GrammarRooms: React.FC<GrammarRoomsProps> = ({
                     <Edit3 className="w-4 h-4" />
                     <span className="korean-text">문장 만들기</span>
                   </motion.button>
+
+                  {quizScore.total > 0 && (
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={resetQuizStats}
+                      className="flex items-center gap-2 bg-red-500/10 hover:bg-red-500/20 px-4 py-2 rounded-lg border border-red-400/20 text-red-300 transition-colors"
+                    >
+                      <RotateCcw className="w-4 h-4" />
+                      <span className="korean-text">초기화</span>
+                    </motion.button>
+                  )}
                 </div>
 
-                {/* Quiz Mode */}
+                {/* Enhanced Quiz Mode */}
                 <AnimatePresence>
-                  {showQuiz && (
+                  {showQuiz && currentQuiz && (
                     <motion.div
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -20 }}
                       className="mt-8 bg-blue-500/10 backdrop-blur-sm rounded-lg p-6 border border-blue-400/20"
                     >
-                      <h4 className="korean-text text-white font-medium mb-4">
-                        퀴즈: 다음 문장을 한국어로 번역하세요
-                      </h4>
-                      <p className="english-text text-blue-200 mb-4">
-                        {selectedGrammar.examples[currentExample].english}
-                      </p>
-                      <div className="flex gap-3">
-                        <input
-                          type="text"
-                          value={quizAnswer}
-                          onChange={(e) => setQuizAnswer(e.target.value)}
-                          placeholder="한국어로 입력하세요..."
-                          className="flex-1 bg-black/20 border border-white/20 rounded-lg px-4 py-2 text-white placeholder-gray-400 focus:border-blue-400 focus:outline-none"
-                          onKeyPress={(e) => e.key === 'Enter' && checkQuizAnswer()}
-                        />
-                        <motion.button
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                          onClick={checkQuizAnswer}
-                          className="bg-blue-500 hover:bg-blue-600 px-6 py-2 rounded-lg text-white transition-colors"
-                        >
-                          확인
-                        </motion.button>
+                      {/* Quiz Header */}
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-2">
+                          {getQuizTypeIcon(currentQuiz.type)}
+                          <h4 className="korean-text text-white font-medium">
+                            {getQuizTypeName(currentQuiz.type)} 퀴즈
+                          </h4>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Clock className="w-4 h-4 text-blue-300" />
+                          <span className={`text-sm font-mono ${timeLeft <= 10 ? 'text-red-400' : 'text-blue-300'}`}>
+                            {timeLeft}s
+                          </span>
+                        </div>
                       </div>
+
+                      <p className="english-text text-blue-200 mb-4">
+                        {currentQuiz.question}
+                      </p>
+
+                      {/* Quiz Input/Options */}
+                      {currentQuiz.type === 'multiple-choice' || currentQuiz.type === 'usage-context' || currentQuiz.type === 'grammar-match' ? (
+                        <div className="grid grid-cols-1 gap-2 mb-4">
+                          {currentQuiz.options?.map((option, index) => (
+                            <motion.button
+                              key={index}
+                              whileHover={{ scale: 1.02 }}
+                              whileTap={{ scale: 0.98 }}
+                              onClick={() => setQuizAnswer(option)}
+                              className={`p-3 rounded-lg border text-left transition-all ${
+                                quizAnswer === option
+                                  ? 'bg-blue-500/20 border-blue-400 text-blue-200'
+                                  : 'bg-black/20 border-white/20 text-white hover:bg-white/10'
+                              }`}
+                            >
+                              {option}
+                            </motion.button>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="flex gap-3 mb-4">
+                          <input
+                            type="text"
+                            value={quizAnswer}
+                            onChange={(e) => setQuizAnswer(e.target.value)}
+                            placeholder="답을 입력하세요..."
+                            className="flex-1 bg-black/20 border border-white/20 rounded-lg px-4 py-2 text-white placeholder-gray-400 focus:border-blue-400 focus:outline-none"
+                            onKeyPress={(e) => e.key === 'Enter' && checkQuizAnswer()}
+                          />
+                        </div>
+                      )}
+
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={checkQuizAnswer}
+                        disabled={!quizAnswer.trim()}
+                        className="bg-blue-500 hover:bg-blue-600 disabled:bg-gray-600 disabled:cursor-not-allowed px-6 py-2 rounded-lg text-white transition-colors"
+                      >
+                        확인
+                      </motion.button>
                       
                       <AnimatePresence>
                         {quizResult && (
@@ -792,17 +871,24 @@ const GrammarRooms: React.FC<GrammarRoomsProps> = ({
                                 : 'bg-red-500/20 border border-red-400/30 text-red-300'
                             }`}
                           >
-                            {quizResult === 'correct' ? (
-                              <div>
-                                <p className="korean-text font-medium">정답입니다! 🎉</p>
-                                <p className="english-text text-sm">Correct!</p>
-                              </div>
-                            ) : (
-                              <div>
-                                <p className="korean-text font-medium">틀렸습니다. 정답: {selectedGrammar.examples[currentExample].korean}</p>
-                                <p className="english-text text-sm">Incorrect. Try again!</p>
-                              </div>
+                            <div className="flex items-center gap-2 mb-2">
+                              {quizResult === 'correct' ? (
+                                <CheckCircle className="w-5 h-5" />
+                              ) : (
+                                <XCircle className="w-5 h-5" />
+                              )}
+                              <p className="korean-text font-medium">
+                                {quizResult === 'correct' ? '정답입니다! 🎉' : '틀렸습니다 😅'}
+                              </p>
+                            </div>
+                            {quizResult === 'incorrect' && (
+                              <p className="korean-text text-sm mb-2">
+                                정답: {currentQuiz.correctAnswer}
+                              </p>
                             )}
+                            <p className="english-text text-sm">
+                              {currentQuiz.explanation}
+                            </p>
                           </motion.div>
                         )}
                       </AnimatePresence>
@@ -833,12 +919,12 @@ const GrammarRooms: React.FC<GrammarRoomsProps> = ({
                     <div className="text-sm text-gray-400 korean-text">총 문법</div>
                   </div>
                   <div className="bg-white/5 rounded-lg p-4">
-                    <div className="text-2xl font-bold text-emerald-400">0</div>
-                    <div className="text-sm text-gray-400 korean-text">학습 완료</div>
+                    <div className="text-2xl font-bold text-emerald-400">{quizScore.correct}</div>
+                    <div className="text-sm text-gray-400 korean-text">정답 수</div>
                   </div>
                   <div className="bg-white/5 rounded-lg p-4">
-                    <div className="text-2xl font-bold text-blue-400">0</div>
-                    <div className="text-sm text-gray-400 korean-text">저장됨</div>
+                    <div className="text-2xl font-bold text-blue-400">{quizStreak}</div>
+                    <div className="text-sm text-gray-400 korean-text">연속 정답</div>
                   </div>
                 </div>
               </motion.div>
