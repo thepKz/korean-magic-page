@@ -41,6 +41,22 @@ const MuseumEntrance: React.FC<MuseumEntranceProps> = ({
     }
   ];
 
+  const handleLevelClick = (levelId: GrammarLevel) => {
+    onLevelSelect(levelId);
+  };
+
+  const handleBackClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onBack();
+  };
+
+  const handleNotebookClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onOpenNotebook();
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -53,7 +69,7 @@ const MuseumEntrance: React.FC<MuseumEntranceProps> = ({
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          onClick={onBack}
+          onClick={handleBackClick}
           className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
         >
           <ArrowLeft className="w-5 h-5" />
@@ -63,7 +79,7 @@ const MuseumEntrance: React.FC<MuseumEntranceProps> = ({
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          onClick={onOpenNotebook}
+          onClick={handleNotebookClick}
           className="flex items-center gap-2 bg-white/5 backdrop-blur-sm px-4 py-2 rounded-lg border border-white/10 text-gray-300 hover:text-white hover:bg-white/10 transition-all"
         >
           <BookOpen className="w-4 h-4" />
@@ -101,7 +117,7 @@ const MuseumEntrance: React.FC<MuseumEntranceProps> = ({
                 transition: { duration: 0.2 }
               }}
               whileTap={{ scale: 0.98 }}
-              onClick={() => onLevelSelect(level.id)}
+              onClick={() => handleLevelClick(level.id)}
               className={`bg-white/5 backdrop-blur-sm border-2 ${level.color} rounded-2xl p-8 cursor-pointer transition-all duration-300 group`}
             >
               <div className="text-center">
@@ -121,6 +137,30 @@ const MuseumEntrance: React.FC<MuseumEntranceProps> = ({
             </motion.div>
           ))}
         </div>
+
+        {/* Interactive Features Preview */}
+        <motion.div
+          initial={{ y: 30, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 1.0 }}
+          className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-4"
+        >
+          <div className="bg-white/5 backdrop-blur-sm rounded-lg p-4 text-center border border-white/10">
+            <div className="text-2xl mb-2">🎯</div>
+            <p className="korean-text text-white text-sm mb-1">퀴즈 모드</p>
+            <p className="english-text text-gray-400 text-xs">Quiz Mode</p>
+          </div>
+          <div className="bg-white/5 backdrop-blur-sm rounded-lg p-4 text-center border border-white/10">
+            <div className="text-2xl mb-2">🔊</div>
+            <p className="korean-text text-white text-sm mb-1">발음 연습</p>
+            <p className="english-text text-gray-400 text-xs">Pronunciation</p>
+          </div>
+          <div className="bg-white/5 backdrop-blur-sm rounded-lg p-4 text-center border border-white/10">
+            <div className="text-2xl mb-2">📝</div>
+            <p className="korean-text text-white text-sm mb-1">문장 만들기</p>
+            <p className="english-text text-gray-400 text-xs">Sentence Builder</p>
+          </div>
+        </motion.div>
       </div>
     </motion.div>
   );

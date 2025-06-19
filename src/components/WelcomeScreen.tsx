@@ -7,6 +7,12 @@ interface WelcomeScreenProps {
 }
 
 const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onEnterMuseum }) => {
+  const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onEnterMuseum();
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -55,7 +61,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onEnterMuseum }) => {
             backgroundColor: "rgba(255, 255, 255, 0.1)"
           }}
           whileTap={{ scale: 0.98 }}
-          onClick={onEnterMuseum}
+          onClick={handleClick}
           className="group bg-white/5 backdrop-blur-sm border border-white/20 text-white px-8 py-4 rounded-full text-lg font-light shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-3 mx-auto"
         >
           <span className="korean-text">시작하기</span>

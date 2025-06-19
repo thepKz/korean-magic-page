@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, BookOpen, Save, Volume2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowLeft, BookOpen, Save, Volume2, ChevronLeft, ChevronRight, Target, Shuffle, Edit3 } from 'lucide-react';
 import { GrammarLevel, GrammarPoint } from '../types/grammar';
 
 interface GrammarRoomsProps {
@@ -19,6 +19,10 @@ const GrammarRooms: React.FC<GrammarRoomsProps> = ({
   const [selectedGrammar, setSelectedGrammar] = useState<GrammarPoint | null>(null);
   const [currentExample, setCurrentExample] = useState(0);
   const [showSaveSuccess, setShowSaveSuccess] = useState(false);
+  const [quizMode, setQuizMode] = useState(false);
+  const [showQuiz, setShowQuiz] = useState(false);
+  const [quizAnswer, setQuizAnswer] = useState('');
+  const [quizResult, setQuizResult] = useState<'correct' | 'incorrect' | null>(null);
 
   // Complete TOPIK 3 grammar data
   const grammarData: Record<GrammarLevel, GrammarPoint[]> = {
@@ -354,6 +358,82 @@ const GrammarRooms: React.FC<GrammarRoomsProps> = ({
         ],
         usage: 'Used to make comparisons or express similarity',
         level: 'intermediate'
+      },
+      // Adding more TOPIK 3 grammar points
+      {
+        id: 'int-21',
+        korean: 'V는군요/A군요',
+        english: 'Oh, I see / So that\'s how it is',
+        structure: 'Verb/Adjective + 군요',
+        examples: [
+          {
+            korean: '잘 준비하는군요.',
+            english: 'Oh, I see you\'re preparing well.',
+            romanization: 'Jal junbihaneun-gunyo.'
+          }
+        ],
+        usage: 'Used to express realization or discovery',
+        level: 'intermediate'
+      },
+      {
+        id: 'int-22',
+        korean: 'V는/A(으)ㄴ 편이다',
+        english: 'To be on the ... side / Rather',
+        structure: 'Verb/Adjective + 편이다',
+        examples: [
+          {
+            korean: '말이 많고 적극적인 편이에요.',
+            english: 'I\'m rather talkative and active.',
+            romanization: 'Mari manko jeokgeukjeogin pyeonieyo.'
+          }
+        ],
+        usage: 'Used to express tendency or general characteristic',
+        level: 'intermediate'
+      },
+      {
+        id: 'int-23',
+        korean: 'V는 바람에',
+        english: 'Because of / Due to',
+        structure: 'Verb stem + 는 바람에',
+        examples: [
+          {
+            korean: '늦게 일어나는 바람에 버스를 놓쳤어요.',
+            english: 'I missed the bus because I woke up late.',
+            romanization: 'Neutge ireonaneun barame beoseureul nochyeosseoyo.'
+          }
+        ],
+        usage: 'Used to express an unintended negative result',
+        level: 'intermediate'
+      },
+      {
+        id: 'int-24',
+        korean: 'V는 중에/중이다',
+        english: 'In the middle of / During',
+        structure: 'Verb stem + 는 중에/중이다',
+        examples: [
+          {
+            korean: '시험 보는 중에 전화가 왔어요.',
+            english: 'A phone call came during the exam.',
+            romanization: 'Siheom boneun junge jeonhwaga wasseoyo.'
+          }
+        ],
+        usage: 'Used to express ongoing action or state',
+        level: 'intermediate'
+      },
+      {
+        id: 'int-25',
+        korean: 'V도록 하다',
+        english: 'To make sure to / To see to it that',
+        structure: 'Verb stem + 도록 하다',
+        examples: [
+          {
+            korean: '내일 늦지 않도록 하겠어요.',
+            english: 'I\'ll make sure not to be late tomorrow.',
+            romanization: 'Naeil neutji andorok hagesseoyo.'
+          }
+        ],
+        usage: 'Used to express intention or determination',
+        level: 'intermediate'
       }
     ],
     advanced: [
@@ -386,12 +466,27 @@ const GrammarRooms: React.FC<GrammarRoomsProps> = ({
   const handleGrammarSelect = (grammar: GrammarPoint) => {
     setSelectedGrammar(grammar);
     setCurrentExample(0);
+    setShowQuiz(false);
+    setQuizResult(null);
+    setQuizAnswer('');
   };
 
   const handleSave = (grammar: GrammarPoint) => {
     onSaveGrammar(grammar);
     setShowSaveSuccess(true);
     setTimeout(() => setShowSaveSuccess(false), 2000);
+  };
+
+  const handleBackClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onBack();
+  };
+
+  const handleNotebookClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onOpenNotebook();
   };
 
   const nextExample = () => {
@@ -406,6 +501,32 @@ const GrammarRooms: React.FC<GrammarRoomsProps> = ({
     }
   };
 
+  const startQuiz = () => {
+    setShowQuiz(true);
+    setQuizAnswer('');
+    setQuizResult(null);
+  };
+
+  const checkQuizAnswer = () => {
+    if (!selectedGrammar) return;
+    
+    const correctAnswer = selectedGrammar.examples[currentExample].korean;
+    const isCorrect = quizAnswer.trim().toLowerCase() === correctAnswer.toLowerCase();
+    
+    setQuizResult(isCorrect ? 'correct' : 'incorrect');
+    
+    setTimeout(() => {
+      setQuizResult(null);
+      setQuizAnswer('');
+      setShowQuiz(false);
+    }, 2000);
+  };
+
+  const getRandomGrammar = () => {
+    const randomIndex = Math.floor(Math.random() * currentGrammarPoints.length);
+    handleGrammarSelect(currentGrammarPoints[randomIndex]);
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -418,7 +539,7 @@ const GrammarRooms: React.FC<GrammarRoomsProps> = ({
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          onClick={onBack}
+          onClick={handleBackClick}
           className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
         >
           <ArrowLeft className="w-5 h-5" />
@@ -435,15 +556,27 @@ const GrammarRooms: React.FC<GrammarRoomsProps> = ({
           </p>
         </div>
 
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={onOpenNotebook}
-          className="flex items-center gap-2 bg-white/5 backdrop-blur-sm px-4 py-2 rounded-lg border border-white/10 text-gray-300 hover:text-white hover:bg-white/10 transition-all"
-        >
-          <BookOpen className="w-4 h-4" />
-          <span className="korean-text">노트</span>
-        </motion.button>
+        <div className="flex items-center gap-3">
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={getRandomGrammar}
+            className="flex items-center gap-2 bg-purple-500/10 backdrop-blur-sm px-3 py-2 rounded-lg border border-purple-400/20 text-purple-300 hover:text-purple-200 hover:bg-purple-500/20 transition-all"
+          >
+            <Shuffle className="w-4 h-4" />
+            <span className="korean-text text-sm">랜덤</span>
+          </motion.button>
+          
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={handleNotebookClick}
+            className="flex items-center gap-2 bg-white/5 backdrop-blur-sm px-4 py-2 rounded-lg border border-white/10 text-gray-300 hover:text-white hover:bg-white/10 transition-all"
+          >
+            <BookOpen className="w-4 h-4" />
+            <span className="korean-text">노트</span>
+          </motion.button>
+        </div>
       </div>
 
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-5 gap-8">
@@ -462,12 +595,19 @@ const GrammarRooms: React.FC<GrammarRoomsProps> = ({
                   selectedGrammar?.id === grammar.id ? 'border-white/30 bg-white/10' : 'hover:bg-white/10'
                 }`}
               >
-                <h3 className="korean-text text-white font-medium mb-1">
-                  {grammar.korean}
-                </h3>
-                <p className="english-text text-gray-400 text-sm">
-                  {grammar.english}
-                </p>
+                <div className="flex items-center justify-between">
+                  <div className="flex-1">
+                    <h3 className="korean-text text-white font-medium mb-1">
+                      {grammar.korean}
+                    </h3>
+                    <p className="english-text text-gray-400 text-sm">
+                      {grammar.english}
+                    </p>
+                  </div>
+                  <div className="text-xs text-gray-500 ml-2">
+                    #{index + 1}
+                  </div>
+                </div>
               </motion.div>
             ))}
           </div>
@@ -523,7 +663,7 @@ const GrammarRooms: React.FC<GrammarRoomsProps> = ({
                 </div>
 
                 {/* Examples */}
-                <div>
+                <div className="mb-8">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="korean-text text-white font-medium">예문</h3>
                     {selectedGrammar.examples.length > 1 && (
@@ -574,6 +714,101 @@ const GrammarRooms: React.FC<GrammarRoomsProps> = ({
                     </motion.div>
                   </AnimatePresence>
                 </div>
+
+                {/* Interactive Features */}
+                <div className="flex flex-wrap gap-3">
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={startQuiz}
+                    className="flex items-center gap-2 bg-blue-500/10 hover:bg-blue-500/20 px-4 py-2 rounded-lg border border-blue-400/20 text-blue-300 transition-colors"
+                  >
+                    <Target className="w-4 h-4" />
+                    <span className="korean-text">퀴즈</span>
+                  </motion.button>
+                  
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="flex items-center gap-2 bg-green-500/10 hover:bg-green-500/20 px-4 py-2 rounded-lg border border-green-400/20 text-green-300 transition-colors"
+                  >
+                    <Volume2 className="w-4 h-4" />
+                    <span className="korean-text">발음</span>
+                  </motion.button>
+                  
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="flex items-center gap-2 bg-orange-500/10 hover:bg-orange-500/20 px-4 py-2 rounded-lg border border-orange-400/20 text-orange-300 transition-colors"
+                  >
+                    <Edit3 className="w-4 h-4" />
+                    <span className="korean-text">문장 만들기</span>
+                  </motion.button>
+                </div>
+
+                {/* Quiz Mode */}
+                <AnimatePresence>
+                  {showQuiz && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -20 }}
+                      className="mt-8 bg-blue-500/10 backdrop-blur-sm rounded-lg p-6 border border-blue-400/20"
+                    >
+                      <h4 className="korean-text text-white font-medium mb-4">
+                        퀴즈: 다음 문장을 한국어로 번역하세요
+                      </h4>
+                      <p className="english-text text-blue-200 mb-4">
+                        {selectedGrammar.examples[currentExample].english}
+                      </p>
+                      <div className="flex gap-3">
+                        <input
+                          type="text"
+                          value={quizAnswer}
+                          onChange={(e) => setQuizAnswer(e.target.value)}
+                          placeholder="한국어로 입력하세요..."
+                          className="flex-1 bg-black/20 border border-white/20 rounded-lg px-4 py-2 text-white placeholder-gray-400 focus:border-blue-400 focus:outline-none"
+                          onKeyPress={(e) => e.key === 'Enter' && checkQuizAnswer()}
+                        />
+                        <motion.button
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          onClick={checkQuizAnswer}
+                          className="bg-blue-500 hover:bg-blue-600 px-6 py-2 rounded-lg text-white transition-colors"
+                        >
+                          확인
+                        </motion.button>
+                      </div>
+                      
+                      <AnimatePresence>
+                        {quizResult && (
+                          <motion.div
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.8 }}
+                            className={`mt-4 p-4 rounded-lg ${
+                              quizResult === 'correct' 
+                                ? 'bg-green-500/20 border border-green-400/30 text-green-300' 
+                                : 'bg-red-500/20 border border-red-400/30 text-red-300'
+                            }`}
+                          >
+                            {quizResult === 'correct' ? (
+                              <div>
+                                <p className="korean-text font-medium">정답입니다! 🎉</p>
+                                <p className="english-text text-sm">Correct!</p>
+                              </div>
+                            ) : (
+                              <div>
+                                <p className="korean-text font-medium">틀렸습니다. 정답: {selectedGrammar.examples[currentExample].korean}</p>
+                                <p className="english-text text-sm">Incorrect. Try again!</p>
+                              </div>
+                            )}
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </motion.div>
             ) : (
               <motion.div
@@ -587,9 +822,25 @@ const GrammarRooms: React.FC<GrammarRoomsProps> = ({
                 <h3 className="korean-text text-white text-xl mb-2">
                   문법을 선택하세요
                 </h3>
-                <p className="english-text text-gray-400">
+                <p className="english-text text-gray-400 mb-6">
                   Select a grammar point to study
                 </p>
+                
+                {/* Quick Stats */}
+                <div className="grid grid-cols-3 gap-4 mt-8">
+                  <div className="bg-white/5 rounded-lg p-4">
+                    <div className="text-2xl font-bold text-white">{currentGrammarPoints.length}</div>
+                    <div className="text-sm text-gray-400 korean-text">총 문법</div>
+                  </div>
+                  <div className="bg-white/5 rounded-lg p-4">
+                    <div className="text-2xl font-bold text-emerald-400">0</div>
+                    <div className="text-sm text-gray-400 korean-text">학습 완료</div>
+                  </div>
+                  <div className="bg-white/5 rounded-lg p-4">
+                    <div className="text-2xl font-bold text-blue-400">0</div>
+                    <div className="text-sm text-gray-400 korean-text">저장됨</div>
+                  </div>
+                </div>
               </motion.div>
             )}
           </AnimatePresence>
@@ -605,7 +856,7 @@ const GrammarRooms: React.FC<GrammarRoomsProps> = ({
             exit={{ opacity: 0, scale: 0.8 }}
             className="fixed top-8 right-8 bg-emerald-500/90 backdrop-blur-sm text-white px-6 py-3 rounded-lg shadow-lg z-50"
           >
-            <p className="korean-text font-medium">저장되었습니다!</p>
+            <p className="korean-text font-medium">저장되었습니다! ✨</p>
           </motion.div>
         )}
       </AnimatePresence>
