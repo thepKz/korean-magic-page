@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Gamepad2, Target, Clock, Star, Shuffle, CheckCircle, XCircle, Trophy } from 'lucide-react';
 import { GrammarPoint } from '../types/grammar';
 
@@ -55,9 +55,9 @@ const GrammarGame: React.FC<GrammarGameProps> = ({ grammarPoints, onGameComplete
 
   // Timer effect
   useEffect(() => {
-    let interval: NodeJS.Timeout;
+    let interval: number;
     if (gameActive && timeLeft > 0) {
-      interval = setInterval(() => {
+      interval = window.setInterval(() => {
         setTimeLeft(prev => prev - 1);
       }, 1000);
     } else if (timeLeft === 0) {

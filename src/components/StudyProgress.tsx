@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Trophy, Target, Clock, Star, TrendingUp, Calendar, Award, Zap } from 'lucide-react';
+import { Trophy, TrendingUp, Award } from 'lucide-react';
 
 interface StudyProgressProps {
   quizStats: {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Trophy, Star, Target, Zap, Crown, Medal, Award, Gift } from 'lucide-react';
+import { Trophy, Star, Target, Zap, Crown, Gift } from 'lucide-react';
 
 interface Achievement {
   id: string;

@@ -49,7 +49,7 @@ export const useProgress = (token: string | null) => {
   });
   const [loading, setLoading] = useState(false);
 
-  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+  const API_URL = (import.meta as any).env?.VITE_API_URL || 'http://localhost:5000/api';
 
   // Load progress from server or localStorage
   useEffect(() => {

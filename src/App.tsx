@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import WelcomeScreen from './components/WelcomeScreen';
 import MuseumEntrance from './components/MuseumEntrance';
@@ -45,9 +45,9 @@ function App() {
 
   // Study time tracker
   useEffect(() => {
-    let interval: NodeJS.Timeout;
+    let interval: number;
     if (currentScreen === 'rooms') {
-      interval = setInterval(() => {
+      interval = window.setInterval(() => {
         setStudyStats(prev => ({
           ...prev,
           studyTime: prev.studyTime + 1

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, BookOpen, Trash2, Star, Search } from 'lucide-react';
+import { ArrowLeft, BookOpen, Star, Search } from 'lucide-react';
 import { GrammarPoint } from '../types/grammar';
 
 interface PersonalNotebookProps {
