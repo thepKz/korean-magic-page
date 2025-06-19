@@ -6,9 +6,10 @@ import GrammarRooms from './components/GrammarRooms';
 import PersonalNotebook from './components/PersonalNotebook';
 import StudyProgress from './components/StudyProgress';
 import GrammarGame from './components/GrammarGame';
+import AdminDashboard from './components/AdminDashboard';
 import { GrammarLevel, GrammarPoint } from './types/grammar';
 
-type ScreenType = 'welcome' | 'entrance' | 'rooms' | 'notebook' | 'progress' | 'games';
+type ScreenType = 'welcome' | 'entrance' | 'rooms' | 'notebook' | 'progress' | 'games' | 'admin' | 'analytics' | 'flashcards' | 'interactive-games' | 'ai-chatbot';
 
 function App() {
   const [currentScreen, setCurrentScreen] = useState<ScreenType>('welcome');
@@ -99,8 +100,6 @@ function App() {
 
   // Get grammar points for games
   const getAllGrammarPoints = (): GrammarPoint[] => {
-    // This would normally come from your grammar data
-    // For now, return saved grammar or empty array
     return savedGrammar;
   };
 
@@ -130,6 +129,11 @@ function App() {
             onOpenNotebook={() => handleScreenChange('notebook')}
             onOpenGames={() => handleScreenChange('games')}
             onOpenProgress={() => handleScreenChange('progress')}
+            onOpenAnalytics={() => handleScreenChange('analytics')}
+            onOpenFlashcards={() => handleScreenChange('flashcards')}
+            onOpenInteractiveGames={() => handleScreenChange('interactive-games')}
+            onOpenAIChatbot={() => handleScreenChange('ai-chatbot')}
+            onOpenAdmin={() => handleScreenChange('admin')}
             onBack={() => handleScreenChange('welcome')}
           />
         )}
@@ -206,6 +210,46 @@ function App() {
                 grammarPoints={getAllGrammarPoints()}
                 onGameComplete={handleGameComplete}
               />
+            </div>
+          </motion.div>
+        )}
+
+        {currentScreen === 'admin' && (
+          <AdminDashboard 
+            key="admin"
+            onBack={() => handleScreenChange('entrance')}
+          />
+        )}
+
+        {/* Placeholder screens for new features */}
+        {(currentScreen === 'analytics' || 
+          currentScreen === 'flashcards' || 
+          currentScreen === 'interactive-games' || 
+          currentScreen === 'ai-chatbot') && (
+          <motion.div
+            key={currentScreen}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="min-h-screen p-8 flex items-center justify-center"
+          >
+            <div className="text-center">
+              <div className="text-6xl mb-4">🚧</div>
+              <h2 className="korean-text text-white text-2xl mb-2">개발 중</h2>
+              <p className="text-gray-400 mb-6">
+                {currentScreen === 'analytics' && 'Advanced Analytics Dashboard'}
+                {currentScreen === 'flashcards' && 'Smart Flashcard System'}
+                {currentScreen === 'interactive-games' && 'Interactive Games Collection'}
+                {currentScreen === 'ai-chatbot' && 'AI Chatbot Tutor'}
+              </p>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => handleScreenChange('entrance')}
+                className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg korean-text"
+              >
+                돌아가기
+              </motion.button>
             </div>
           </motion.div>
         )}

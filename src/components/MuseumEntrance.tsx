@@ -8,9 +8,11 @@ interface MuseumEntranceProps {
   onOpenNotebook: () => void;
   onOpenGames: () => void;
   onOpenProgress: () => void;
-  onOpenAnalytics: () => void;
-  onOpenFlashcards: () => void;
-  onOpenInteractiveGames: () => void;
+  onOpenAnalytics?: () => void;
+  onOpenFlashcards?: () => void;
+  onOpenInteractiveGames?: () => void;
+  onOpenAIChatbot?: () => void;
+  onOpenAdmin?: () => void;
   onBack: () => void;
 }
 
@@ -19,9 +21,11 @@ const MuseumEntrance: React.FC<MuseumEntranceProps> = ({
   onOpenNotebook,
   onOpenGames,
   onOpenProgress,
-  onOpenAnalytics,
-  onOpenFlashcards,
-  onOpenInteractiveGames,
+  onOpenAnalytics = () => {},
+  onOpenFlashcards = () => {},
+  onOpenInteractiveGames = () => {},
+  onOpenAIChatbot = () => {},
+  onOpenAdmin = () => {},
   onBack 
 }) => {
   const levels = [
@@ -143,7 +147,16 @@ const MuseumEntrance: React.FC<MuseumEntranceProps> = ({
           </p>
         </div>
 
-        <div className="w-20"></div> {/* Spacer for centering */}
+        {/* Admin Access Button */}
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={onOpenAdmin}
+          className="flex items-center gap-2 bg-red-500/10 backdrop-blur-sm px-3 py-2 rounded-lg border border-red-400/20 text-red-300 hover:text-red-200 hover:bg-red-500/20 transition-all"
+        >
+          <BarChart3 className="w-4 h-4" />
+          <span className="korean-text text-sm">관리자</span>
+        </motion.button>
       </div>
 
       {/* Main Content */}
@@ -230,18 +243,23 @@ const MuseumEntrance: React.FC<MuseumEntranceProps> = ({
           ))}
         </motion.div>
 
-        {/* Interactive Features Preview */}
+        {/* AI Features Preview */}
         <motion.div
           initial={{ y: 30, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 1.0 }}
           className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4"
         >
-          <div className="bg-white/5 backdrop-blur-sm rounded-lg p-4 text-center border border-white/10">
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={onOpenAIChatbot}
+            className="bg-white/5 backdrop-blur-sm rounded-lg p-4 text-center border border-white/10 cursor-pointer hover:border-blue-400/30 transition-all"
+          >
             <div className="text-2xl mb-2">🤖</div>
             <p className="korean-text text-white text-sm mb-1">AI 튜터</p>
             <p className="english-text text-gray-400 text-xs">AI Chatbot</p>
-          </div>
+          </motion.div>
           <div className="bg-white/5 backdrop-blur-sm rounded-lg p-4 text-center border border-white/10">
             <div className="text-2xl mb-2">🎯</div>
             <p className="korean-text text-white text-sm mb-1">다양한 퀴즈</p>
@@ -264,5 +282,3 @@ const MuseumEntrance: React.FC<MuseumEntranceProps> = ({
 };
 
 export default MuseumEntrance;
-
-export default MuseumEntrance
