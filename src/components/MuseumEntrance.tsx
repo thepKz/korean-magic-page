@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ArrowLeft, BookOpen, Gamepad2, TrendingUp } from 'lucide-react';
+import { ArrowLeft, BookOpen, Gamepad2, TrendingUp, BarChart3, CreditCard, Puzzle } from 'lucide-react';
 import { GrammarLevel } from '../types/grammar';
 
 interface MuseumEntranceProps {
@@ -8,6 +8,9 @@ interface MuseumEntranceProps {
   onOpenNotebook: () => void;
   onOpenGames: () => void;
   onOpenProgress: () => void;
+  onOpenAnalytics: () => void;
+  onOpenFlashcards: () => void;
+  onOpenInteractiveGames: () => void;
   onBack: () => void;
 }
 
@@ -16,6 +19,9 @@ const MuseumEntrance: React.FC<MuseumEntranceProps> = ({
   onOpenNotebook,
   onOpenGames,
   onOpenProgress,
+  onOpenAnalytics,
+  onOpenFlashcards,
+  onOpenInteractiveGames,
   onBack 
 }) => {
   const levels = [
@@ -58,12 +64,28 @@ const MuseumEntrance: React.FC<MuseumEntranceProps> = ({
       color: 'text-blue-400'
     },
     {
+      icon: <CreditCard className="w-6 h-6" />,
+      korean: '플래시카드',
+      english: 'Flashcards',
+      description: '카드로 복습하기',
+      onClick: onOpenFlashcards,
+      color: 'text-purple-400'
+    },
+    {
       icon: <Gamepad2 className="w-6 h-6" />,
       korean: '문법 게임',
       english: 'Grammar Games',
       description: '재미있게 학습하기',
       onClick: onOpenGames,
-      color: 'text-purple-400'
+      color: 'text-green-400'
+    },
+    {
+      icon: <Puzzle className="w-6 h-6" />,
+      korean: '인터랙티브 게임',
+      english: 'Interactive Games',
+      description: '다양한 게임 모드',
+      onClick: onOpenInteractiveGames,
+      color: 'text-orange-400'
     },
     {
       icon: <TrendingUp className="w-6 h-6" />,
@@ -72,6 +94,14 @@ const MuseumEntrance: React.FC<MuseumEntranceProps> = ({
       description: '성취도 확인하기',
       onClick: onOpenProgress,
       color: 'text-emerald-400'
+    },
+    {
+      icon: <BarChart3 className="w-6 h-6" />,
+      korean: '고급 분석',
+      english: 'Advanced Analytics',
+      description: '상세한 학습 분석',
+      onClick: onOpenAnalytics,
+      color: 'text-cyan-400'
     }
   ];
 
@@ -172,7 +202,7 @@ const MuseumEntrance: React.FC<MuseumEntranceProps> = ({
           initial={{ y: 30, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.8 }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-6"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
         >
           {features.map((feature, index) => (
             <motion.div
@@ -208,6 +238,11 @@ const MuseumEntrance: React.FC<MuseumEntranceProps> = ({
           className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4"
         >
           <div className="bg-white/5 backdrop-blur-sm rounded-lg p-4 text-center border border-white/10">
+            <div className="text-2xl mb-2">🤖</div>
+            <p className="korean-text text-white text-sm mb-1">AI 튜터</p>
+            <p className="english-text text-gray-400 text-xs">AI Chatbot</p>
+          </div>
+          <div className="bg-white/5 backdrop-blur-sm rounded-lg p-4 text-center border border-white/10">
             <div className="text-2xl mb-2">🎯</div>
             <p className="korean-text text-white text-sm mb-1">다양한 퀴즈</p>
             <p className="english-text text-gray-400 text-xs">Various Quizzes</p>
@@ -222,11 +257,6 @@ const MuseumEntrance: React.FC<MuseumEntranceProps> = ({
             <p className="korean-text text-white text-sm mb-1">진도 추적</p>
             <p className="english-text text-gray-400 text-xs">Progress Tracking</p>
           </div>
-          <div className="bg-white/5 backdrop-blur-sm rounded-lg p-4 text-center border border-white/10">
-            <div className="text-2xl mb-2">🏆</div>
-            <p className="korean-text text-white text-sm mb-1">성취 시스템</p>
-            <p className="english-text text-gray-400 text-xs">Achievements</p>
-          </div>
         </motion.div>
       </div>
     </motion.div>
@@ -234,3 +264,5 @@ const MuseumEntrance: React.FC<MuseumEntranceProps> = ({
 };
 
 export default MuseumEntrance;
+
+export default MuseumEntrance
