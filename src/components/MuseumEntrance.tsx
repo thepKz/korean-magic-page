@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ArrowLeft, BookOpen, Gamepad2, TrendingUp, BarChart3, CreditCard, Puzzle } from 'lucide-react';
+import { ArrowLeft, BookOpen, Gamepad2, TrendingUp, BarChart3, CreditCard, Puzzle, Bot } from 'lucide-react';
 import { GrammarLevel } from '../types/grammar';
 
 interface MuseumEntranceProps {
@@ -33,8 +33,8 @@ const MuseumEntrance: React.FC<MuseumEntranceProps> = ({
       id: 'beginner' as GrammarLevel,
       korean: '초급',
       english: 'Beginner',
-      description: '기초 문법',
-      count: '2개 문법',
+      description: 'Basic Grammar',
+      count: '2 grammar points',
       color: 'border-emerald-500/30 hover:border-emerald-400/50',
       gradient: 'from-emerald-500/10 to-green-500/10'
     },
@@ -42,8 +42,8 @@ const MuseumEntrance: React.FC<MuseumEntranceProps> = ({
       id: 'intermediate' as GrammarLevel,
       korean: '중급',
       english: 'Intermediate', 
-      description: 'TOPIK 3급',
-      count: '50개 문법',
+      description: 'TOPIK Level 3',
+      count: '50 grammar points',
       color: 'border-blue-500/30 hover:border-blue-400/50',
       gradient: 'from-blue-500/10 to-cyan-500/10'
     },
@@ -51,8 +51,8 @@ const MuseumEntrance: React.FC<MuseumEntranceProps> = ({
       id: 'advanced' as GrammarLevel,
       korean: '고급',
       english: 'Advanced',
-      description: '고급 문법',
-      count: '1개 문법',
+      description: 'Advanced Grammar',
+      count: '1 grammar point',
       color: 'border-purple-500/30 hover:border-purple-400/50',
       gradient: 'from-purple-500/10 to-pink-500/10'
     }
@@ -62,8 +62,8 @@ const MuseumEntrance: React.FC<MuseumEntranceProps> = ({
     {
       icon: <BookOpen className="w-6 h-6" />,
       korean: '개인 노트',
-      english: 'Personal Notes',
-      description: '저장된 문법 보기',
+      english: 'My Notes',
+      description: 'View saved grammar',
       onClick: onOpenNotebook,
       color: 'text-blue-400'
     },
@@ -71,7 +71,7 @@ const MuseumEntrance: React.FC<MuseumEntranceProps> = ({
       icon: <CreditCard className="w-6 h-6" />,
       korean: '플래시카드',
       english: 'Flashcards',
-      description: '카드로 복습하기',
+      description: 'Review with cards',
       onClick: onOpenFlashcards,
       color: 'text-purple-400'
     },
@@ -79,7 +79,7 @@ const MuseumEntrance: React.FC<MuseumEntranceProps> = ({
       icon: <Gamepad2 className="w-6 h-6" />,
       korean: '문법 게임',
       english: 'Grammar Games',
-      description: '재미있게 학습하기',
+      description: 'Learn through games',
       onClick: onOpenGames,
       color: 'text-green-400'
     },
@@ -87,7 +87,7 @@ const MuseumEntrance: React.FC<MuseumEntranceProps> = ({
       icon: <Puzzle className="w-6 h-6" />,
       korean: '인터랙티브 게임',
       english: 'Interactive Games',
-      description: '다양한 게임 모드',
+      description: 'Various game modes',
       onClick: onOpenInteractiveGames,
       color: 'text-orange-400'
     },
@@ -95,15 +95,15 @@ const MuseumEntrance: React.FC<MuseumEntranceProps> = ({
       icon: <TrendingUp className="w-6 h-6" />,
       korean: '학습 진도',
       english: 'Study Progress',
-      description: '성취도 확인하기',
+      description: 'Check your progress',
       onClick: onOpenProgress,
       color: 'text-emerald-400'
     },
     {
       icon: <BarChart3 className="w-6 h-6" />,
       korean: '고급 분석',
-      english: 'Advanced Analytics',
-      description: '상세한 학습 분석',
+      english: 'Analytics',
+      description: 'Detailed study analysis',
       onClick: onOpenAnalytics,
       color: 'text-cyan-400'
     }
@@ -135,7 +135,7 @@ const MuseumEntrance: React.FC<MuseumEntranceProps> = ({
           className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
         >
           <ArrowLeft className="w-5 h-5" />
-          <span className="korean-text">돌아가기</span>
+          <span>Back</span>
         </motion.button>
 
         <div className="text-center">
@@ -155,7 +155,7 @@ const MuseumEntrance: React.FC<MuseumEntranceProps> = ({
           className="flex items-center gap-2 bg-red-500/10 backdrop-blur-sm px-3 py-2 rounded-lg border border-red-400/20 text-red-300 hover:text-red-200 hover:bg-red-500/20 transition-all"
         >
           <BarChart3 className="w-4 h-4" />
-          <span className="korean-text text-sm">관리자</span>
+          <span className="text-sm">Admin</span>
         </motion.button>
       </div>
 
@@ -168,11 +168,11 @@ const MuseumEntrance: React.FC<MuseumEntranceProps> = ({
           transition={{ delay: 0.2 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl md:text-5xl font-light korean-text text-white mb-4">
-            학습 단계 선택
+          <h2 className="text-4xl md:text-5xl font-light text-white mb-4">
+            Choose Your Level
           </h2>
-          <p className="text-lg english-text text-gray-400">
-            Choose your learning path
+          <p className="text-lg text-gray-400">
+            Select your learning path
           </p>
         </motion.div>
 
@@ -199,7 +199,7 @@ const MuseumEntrance: React.FC<MuseumEntranceProps> = ({
                 <p className="english-text text-gray-300 mb-4 font-light">
                   {level.english}
                 </p>
-                <p className="korean-text text-gray-400 text-sm mb-2">
+                <p className="text-gray-400 text-sm mb-2">
                   {level.description}
                 </p>
                 <p className="text-xs text-gray-500">
@@ -229,13 +229,13 @@ const MuseumEntrance: React.FC<MuseumEntranceProps> = ({
                 <div className={`${feature.color} mb-4 group-hover:scale-110 transition-transform`}>
                   {feature.icon}
                 </div>
-                <h3 className="korean-text text-white font-medium mb-2">
-                  {feature.korean}
-                </h3>
-                <p className="english-text text-gray-400 text-sm mb-2">
+                <h3 className="text-white font-medium mb-2">
                   {feature.english}
+                </h3>
+                <p className="korean-text text-gray-400 text-sm mb-2">
+                  {feature.korean}
                 </p>
-                <p className="korean-text text-gray-500 text-xs">
+                <p className="text-gray-500 text-xs">
                   {feature.description}
                 </p>
               </div>
@@ -257,23 +257,23 @@ const MuseumEntrance: React.FC<MuseumEntranceProps> = ({
             className="bg-white/5 backdrop-blur-sm rounded-lg p-4 text-center border border-white/10 cursor-pointer hover:border-blue-400/30 transition-all"
           >
             <div className="text-2xl mb-2">🤖</div>
-            <p className="korean-text text-white text-sm mb-1">AI 튜터</p>
-            <p className="english-text text-gray-400 text-xs">AI Chatbot</p>
+            <p className="text-white text-sm mb-1">AI Tutor</p>
+            <p className="text-gray-400 text-xs">AI 튜터</p>
           </motion.div>
           <div className="bg-white/5 backdrop-blur-sm rounded-lg p-4 text-center border border-white/10">
             <div className="text-2xl mb-2">🎯</div>
-            <p className="korean-text text-white text-sm mb-1">다양한 퀴즈</p>
-            <p className="english-text text-gray-400 text-xs">Various Quizzes</p>
+            <p className="text-white text-sm mb-1">Various Quizzes</p>
+            <p className="text-gray-400 text-xs">다양한 퀴즈</p>
           </div>
           <div className="bg-white/5 backdrop-blur-sm rounded-lg p-4 text-center border border-white/10">
             <div className="text-2xl mb-2">🎮</div>
-            <p className="korean-text text-white text-sm mb-1">게임 모드</p>
-            <p className="english-text text-gray-400 text-xs">Game Modes</p>
+            <p className="text-white text-sm mb-1">Game Modes</p>
+            <p className="text-gray-400 text-xs">게임 모드</p>
           </div>
           <div className="bg-white/5 backdrop-blur-sm rounded-lg p-4 text-center border border-white/10">
             <div className="text-2xl mb-2">📊</div>
-            <p className="korean-text text-white text-sm mb-1">진도 추적</p>
-            <p className="english-text text-gray-400 text-xs">Progress Tracking</p>
+            <p className="text-white text-sm mb-1">Progress Tracking</p>
+            <p className="text-gray-400 text-xs">진도 추적</p>
           </div>
         </motion.div>
       </div>

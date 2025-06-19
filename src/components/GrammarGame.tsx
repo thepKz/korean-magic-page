@@ -127,13 +127,13 @@ const GrammarGame: React.FC<GrammarGameProps> = ({ grammarPoints, onGameComplete
   const getGameModeInfo = (mode: GameMode) => {
     switch (mode) {
       case 'speed-quiz':
-        return { name: '스피드 퀴즈', icon: <Target className="w-5 h-5" />, description: '60초 안에 최대한 많이!' };
+        return { name: 'Speed Quiz', icon: <Target className="w-5 h-5" />, description: 'Answer as many as you can in 60 seconds!' };
       case 'memory-match':
-        return { name: '기억 매칭', icon: <Star className="w-5 h-5" />, description: '문법과 의미를 매칭하세요' };
+        return { name: 'Memory Match', icon: <Star className="w-5 h-5" />, description: 'Match grammar with meanings' };
       case 'sentence-builder':
-        return { name: '문장 만들기', icon: <Shuffle className="w-5 h-5" />, description: '올바른 문장을 완성하세요' };
+        return { name: 'Sentence Builder', icon: <Shuffle className="w-5 h-5" />, description: 'Complete the correct sentences' };
       case 'grammar-race':
-        return { name: '문법 레이스', icon: <Trophy className="w-5 h-5" />, description: '시간과의 경주!' };
+        return { name: 'Grammar Race', icon: <Trophy className="w-5 h-5" />, description: 'Race against time!' };
       default:
         return { name: '', icon: null, description: '' };
     }
@@ -144,8 +144,8 @@ const GrammarGame: React.FC<GrammarGameProps> = ({ grammarPoints, onGameComplete
       <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/10">
         <div className="text-center mb-8">
           <Gamepad2 className="w-12 h-12 text-purple-400 mx-auto mb-4" />
-          <h2 className="korean-text text-white text-2xl font-bold mb-2">문법 게임</h2>
-          <p className="english-text text-gray-400">Choose your game mode</p>
+          <h2 className="text-white text-2xl font-bold mb-2">Grammar Games</h2>
+          <p className="text-gray-400">Choose your game mode</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -161,7 +161,7 @@ const GrammarGame: React.FC<GrammarGameProps> = ({ grammarPoints, onGameComplete
               >
                 <div className="flex items-center gap-3 mb-3">
                   {info.icon}
-                  <h3 className="korean-text text-white font-bold">{info.name}</h3>
+                  <h3 className="text-white font-bold">{info.name}</h3>
                 </div>
                 <p className="text-gray-300 text-sm">{info.description}</p>
               </motion.button>
@@ -173,7 +173,7 @@ const GrammarGame: React.FC<GrammarGameProps> = ({ grammarPoints, onGameComplete
           <div className="mt-6 text-center">
             <div className="inline-flex items-center gap-2 bg-yellow-500/20 px-4 py-2 rounded-lg border border-yellow-400/30">
               <Trophy className="w-4 h-4 text-yellow-400" />
-              <span className="korean-text text-yellow-300">최고 연속: {bestStreak}개</span>
+              <span className="text-yellow-300">Best Streak: {bestStreak}</span>
             </div>
           </div>
         )}
@@ -190,20 +190,20 @@ const GrammarGame: React.FC<GrammarGameProps> = ({ grammarPoints, onGameComplete
         className="bg-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/10 text-center"
       >
         <Trophy className="w-16 h-16 text-yellow-400 mx-auto mb-4" />
-        <h2 className="korean-text text-white text-2xl font-bold mb-4">게임 완료!</h2>
+        <h2 className="text-white text-2xl font-bold mb-4">Game Complete!</h2>
         
         <div className="grid grid-cols-3 gap-4 mb-6">
           <div className="bg-black/20 rounded-lg p-4">
             <div className="text-2xl font-bold text-emerald-400">{score}</div>
-            <div className="text-sm text-gray-400 korean-text">정답</div>
+            <div className="text-sm text-gray-400">Correct</div>
           </div>
           <div className="bg-black/20 rounded-lg p-4">
             <div className="text-2xl font-bold text-blue-400">{percentage}%</div>
-            <div className="text-sm text-gray-400 korean-text">정확도</div>
+            <div className="text-sm text-gray-400">Accuracy</div>
           </div>
           <div className="bg-black/20 rounded-lg p-4">
             <div className="text-2xl font-bold text-purple-400">{bestStreak}</div>
-            <div className="text-sm text-gray-400 korean-text">최고 연속</div>
+            <div className="text-sm text-gray-400">Best Streak</div>
           </div>
         </div>
 
@@ -212,17 +212,17 @@ const GrammarGame: React.FC<GrammarGameProps> = ({ grammarPoints, onGameComplete
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => startGame(gameMode)}
-            className="bg-purple-500 hover:bg-purple-600 px-6 py-3 rounded-lg text-white korean-text font-medium"
+            className="bg-purple-500 hover:bg-purple-600 px-6 py-3 rounded-lg text-white font-medium"
           >
-            다시 하기
+            Play Again
           </motion.button>
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={resetGame}
-            className="bg-gray-600 hover:bg-gray-700 px-6 py-3 rounded-lg text-white korean-text font-medium"
+            className="bg-gray-600 hover:bg-gray-700 px-6 py-3 rounded-lg text-white font-medium"
           >
-            메뉴로
+            Menu
           </motion.button>
         </div>
       </motion.div>
@@ -242,7 +242,7 @@ const GrammarGame: React.FC<GrammarGameProps> = ({ grammarPoints, onGameComplete
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
           {getGameModeInfo(gameMode).icon}
-          <h3 className="korean-text text-white font-bold">{getGameModeInfo(gameMode).name}</h3>
+          <h3 className="text-white font-bold">{getGameModeInfo(gameMode).name}</h3>
         </div>
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
@@ -275,10 +275,10 @@ const GrammarGame: React.FC<GrammarGameProps> = ({ grammarPoints, onGameComplete
 
       {/* Question */}
       <div className="mb-8">
-        <h4 className="korean-text text-white text-lg mb-2">
-          문제 {currentQuestion + 1}
+        <h4 className="text-white text-lg mb-2">
+          Question {currentQuestion + 1}
         </h4>
-        <p className="english-text text-gray-300 text-xl mb-6">
+        <p className="text-gray-300 text-xl mb-6">
           {currentQ.question}
         </p>
 
@@ -325,7 +325,7 @@ const GrammarGame: React.FC<GrammarGameProps> = ({ grammarPoints, onGameComplete
           animate={{ opacity: 1, y: 0 }}
           className="bg-black/20 rounded-lg p-4"
         >
-          <p className="korean-text text-white font-medium mb-2">
+          <p className="text-white font-medium mb-2">
             {currentQ.grammarPoint.korean} - {currentQ.grammarPoint.english}
           </p>
           <p className="text-gray-400 text-sm">

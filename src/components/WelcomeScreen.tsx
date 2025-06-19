@@ -43,11 +43,11 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onEnterMuseum }) => {
           transition={{ duration: 0.8, delay: 0.6 }}
           className="mb-16"
         >
-          <p className="text-lg korean-text text-gray-400 mb-2">
-            한국어 문법을 체계적으로 학습하세요
-          </p>
-          <p className="text-base english-text text-gray-500">
+          <p className="text-lg text-gray-400 mb-2">
             Learn Korean grammar systematically
+          </p>
+          <p className="text-base text-gray-500">
+            체계적으로 한국어 문법을 배워보세요
           </p>
         </motion.div>
 
@@ -64,7 +64,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onEnterMuseum }) => {
           onClick={handleClick}
           className="group bg-white/5 backdrop-blur-sm border border-white/20 text-white px-8 py-4 rounded-full text-lg font-light shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-3 mx-auto"
         >
-          <span className="korean-text">시작하기</span>
+          <span>Start Learning</span>
           <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
         </motion.button>
       </div>

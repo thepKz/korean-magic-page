@@ -248,7 +248,7 @@ const GrammarRooms: React.FC<GrammarRoomsProps> = ({
           className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
         >
           <ArrowLeft className="w-5 h-5" />
-          <span className="korean-text">돌아가기</span>
+          <span>Back</span>
         </motion.button>
 
         <div className="text-center">
@@ -257,7 +257,7 @@ const GrammarRooms: React.FC<GrammarRoomsProps> = ({
           </h1>
           <p className="text-sm english-text text-gray-400">
             {levelInfo[level].english}
-            {level === 'intermediate' && ' • TOPIK 3급'}
+            {level === 'intermediate' && ' • TOPIK Level 3'}
           </p>
         </div>
 
@@ -285,7 +285,7 @@ const GrammarRooms: React.FC<GrammarRoomsProps> = ({
             className="flex items-center gap-2 bg-purple-500/10 backdrop-blur-sm px-3 py-2 rounded-lg border border-purple-400/20 text-purple-300 hover:text-purple-200 hover:bg-purple-500/20 transition-all"
           >
             <Shuffle className="w-4 h-4" />
-            <span className="korean-text text-sm">랜덤</span>
+            <span className="text-sm">Random</span>
           </motion.button>
           
           <motion.button
@@ -295,7 +295,7 @@ const GrammarRooms: React.FC<GrammarRoomsProps> = ({
             className="flex items-center gap-2 bg-white/5 backdrop-blur-sm px-4 py-2 rounded-lg border border-white/10 text-gray-300 hover:text-white hover:bg-white/10 transition-all"
           >
             <BookOpen className="w-4 h-4" />
-            <span className="korean-text">노트</span>
+            <span>My Notes</span>
           </motion.button>
         </div>
       </div>
@@ -367,7 +367,7 @@ const GrammarRooms: React.FC<GrammarRoomsProps> = ({
 
                 {/* Structure */}
                 <div className="mb-8">
-                  <h3 className="korean-text text-white font-medium mb-3">구조</h3>
+                  <h3 className="text-white font-medium mb-3">Structure</h3>
                   <div className="bg-black/20 rounded-lg p-4">
                     <code className="text-yellow-300 font-mono">
                       {selectedGrammar.structure}
@@ -377,7 +377,7 @@ const GrammarRooms: React.FC<GrammarRoomsProps> = ({
 
                 {/* Usage */}
                 <div className="mb-8">
-                  <h3 className="korean-text text-white font-medium mb-3">사용법</h3>
+                  <h3 className="text-white font-medium mb-3">Usage</h3>
                   <p className="text-gray-300 leading-relaxed">
                     {selectedGrammar.usage}
                   </p>
@@ -386,7 +386,7 @@ const GrammarRooms: React.FC<GrammarRoomsProps> = ({
                 {/* Examples */}
                 <div className="mb-8">
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="korean-text text-white font-medium">예문</h3>
+                    <h3 className="text-white font-medium">Examples</h3>
                     {selectedGrammar.examples.length > 1 && (
                       <div className="flex items-center gap-2">
                         <button
@@ -444,7 +444,7 @@ const GrammarRooms: React.FC<GrammarRoomsProps> = ({
                     className="flex items-center gap-2 bg-green-500/10 hover:bg-green-500/20 px-4 py-2 rounded-lg border border-green-400/20 text-green-300 transition-colors"
                   >
                     <Volume2 className="w-4 h-4" />
-                    <span className="korean-text">발음</span>
+                    <span>Pronunciation</span>
                   </motion.button>
                   
                   <motion.button
@@ -453,7 +453,7 @@ const GrammarRooms: React.FC<GrammarRoomsProps> = ({
                     className="flex items-center gap-2 bg-orange-500/10 hover:bg-orange-500/20 px-4 py-2 rounded-lg border border-orange-400/20 text-orange-300 transition-colors"
                   >
                     <Edit3 className="w-4 h-4" />
-                    <span className="korean-text">문장 만들기</span>
+                    <span>Make Sentence</span>
                   </motion.button>
 
                   {quizScore.total > 0 && (
@@ -464,7 +464,7 @@ const GrammarRooms: React.FC<GrammarRoomsProps> = ({
                       className="flex items-center gap-2 bg-red-500/10 hover:bg-red-500/20 px-4 py-2 rounded-lg border border-red-400/20 text-red-300 transition-colors"
                     >
                       <RotateCcw className="w-4 h-4" />
-                      <span className="korean-text">초기화</span>
+                      <span>Reset</span>
                     </motion.button>
                   )}
                 </div>
@@ -478,26 +478,26 @@ const GrammarRooms: React.FC<GrammarRoomsProps> = ({
                 <div className="text-gray-500 mb-4">
                   <BookOpen className="w-12 h-12 mx-auto" />
                 </div>
-                <h3 className="korean-text text-white text-xl mb-2">
-                  문법을 선택하세요
+                <h3 className="text-white text-xl mb-2">
+                  Select a grammar point
                 </h3>
-                <p className="english-text text-gray-400 mb-6">
-                  Select a grammar point to study
+                <p className="text-gray-400 mb-6">
+                  Choose a grammar point to study
                 </p>
                 
                 {/* Quick Stats */}
                 <div className="grid grid-cols-3 gap-4 mt-8">
                   <div className="bg-white/5 rounded-lg p-4">
                     <div className="text-2xl font-bold text-white">{currentGrammarPoints.length}</div>
-                    <div className="text-sm text-gray-400 korean-text">총 문법</div>
+                    <div className="text-sm text-gray-400">Total Grammar</div>
                   </div>
                   <div className="bg-white/5 rounded-lg p-4">
                     <div className="text-2xl font-bold text-emerald-400">{quizScore.correct}</div>
-                    <div className="text-sm text-gray-400 korean-text">정답 수</div>
+                    <div className="text-sm text-gray-400">Correct</div>
                   </div>
                   <div className="bg-white/5 rounded-lg p-4">
                     <div className="text-2xl font-bold text-blue-400">{quizStreak}</div>
-                    <div className="text-sm text-gray-400 korean-text">연속 정답</div>
+                    <div className="text-sm text-gray-400">Streak</div>
                   </div>
                 </div>
               </motion.div>
@@ -515,7 +515,7 @@ const GrammarRooms: React.FC<GrammarRoomsProps> = ({
             exit={{ opacity: 0, scale: 0.8 }}
             className="fixed top-8 right-8 bg-emerald-500/90 backdrop-blur-sm text-white px-6 py-3 rounded-lg shadow-lg z-50"
           >
-            <p className="korean-text font-medium">저장되었습니다! ✨</p>
+            <p className="font-medium">Saved! ✨</p>
           </motion.div>
         )}
       </AnimatePresence>

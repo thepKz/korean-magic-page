@@ -45,13 +45,13 @@ const PersonalNotebook: React.FC<PersonalNotebookProps> = ({
           className="flex items-center gap-2 text-white/80 hover:text-white transition-colors"
         >
           <ArrowLeft className="w-5 h-5" />
-          <span className="korean-text">돌아가기</span>
+          <span>Back</span>
         </motion.button>
 
         <div className="flex items-center gap-2">
           <BookOpen className="w-6 h-6 text-white" />
-          <h1 className="text-2xl font-bold korean-text text-white">
-            개인 노트북
+          <h1 className="text-2xl font-bold text-white">
+            My Notes
           </h1>
         </div>
       </div>
@@ -80,11 +80,11 @@ const PersonalNotebook: React.FC<PersonalNotebookProps> = ({
             <div className="flex-1 p-8">
               {/* Notebook Header */}
               <div className="border-b-2 border-red-300 pb-6 mb-8">
-                <h2 className="text-3xl font-bold korean-text text-red-800 mb-2">
-                  나의 문법 노트
+                <h2 className="text-3xl font-bold text-red-800 mb-2">
+                  My Grammar Notes
                 </h2>
-                <p className="english-text text-red-600">
-                  My Grammar Notebook
+                <p className="text-red-600">
+                  나의 문법 노트
                 </p>
                 
                 {/* Search Bar */}
@@ -92,10 +92,10 @@ const PersonalNotebook: React.FC<PersonalNotebookProps> = ({
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-red-400" />
                   <input
                     type="text"
-                    placeholder="문법 검색... (Search grammar...)"
+                    placeholder="Search grammar... (문법 검색...)"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 bg-white/70 border-2 border-red-200 rounded-lg focus:border-red-400 focus:outline-none korean-text"
+                    className="w-full pl-10 pr-4 py-3 bg-white/70 border-2 border-red-200 rounded-lg focus:border-red-400 focus:outline-none"
                   />
                 </div>
               </div>
@@ -108,14 +108,14 @@ const PersonalNotebook: React.FC<PersonalNotebookProps> = ({
                   className="text-center py-16"
                 >
                   <div className="text-6xl mb-4">📝</div>
-                  <h3 className="korean-text text-red-700 text-xl mb-2">
-                    아직 저장된 문법이 없습니다
+                  <h3 className="text-red-700 text-xl mb-2">
+                    No saved grammar yet
                   </h3>
-                  <p className="english-text text-red-500">
-                    No saved grammar points yet
+                  <p className="text-red-500">
+                    아직 저장된 문법이 없습니다
                   </p>
-                  <p className="korean-text text-red-600 mt-4">
-                    전시관에서 문법을 저장해보세요!
+                  <p className="text-red-600 mt-4">
+                    Save grammar points from the study rooms!
                   </p>
                 </motion.div>
               ) : (
@@ -151,8 +151,8 @@ const PersonalNotebook: React.FC<PersonalNotebookProps> = ({
                               grammar.level === 'intermediate' ? 'bg-blue-200 text-blue-800' :
                               'bg-purple-200 text-purple-800'
                             }`}>
-                              {grammar.level === 'beginner' ? '초급' :
-                               grammar.level === 'intermediate' ? '중급' : '고급'}
+                              {grammar.level === 'beginner' ? 'Beginner' :
+                               grammar.level === 'intermediate' ? 'Intermediate' : 'Advanced'}
                             </span>
                             <Star className="w-5 h-5 text-yellow-500 group-hover:scale-110 transition-transform" />
                           </div>
@@ -231,24 +231,24 @@ const PersonalNotebook: React.FC<PersonalNotebookProps> = ({
 
               <div className="space-y-6">
                 <div>
-                  <h4 className="korean-text font-semibold text-red-700 mb-2">영어:</h4>
-                  <p className="english-text text-red-600">{selectedGrammar.english}</p>
+                  <h4 className="font-semibold text-red-700 mb-2">English:</h4>
+                  <p className="text-red-600">{selectedGrammar.english}</p>
                 </div>
 
                 <div>
-                  <h4 className="korean-text font-semibold text-red-700 mb-2">구조:</h4>
+                  <h4 className="font-semibold text-red-700 mb-2">Structure:</h4>
                   <p className="font-mono bg-red-50 p-3 rounded text-red-800">
                     {selectedGrammar.structure}
                   </p>
                 </div>
 
                 <div>
-                  <h4 className="korean-text font-semibold text-red-700 mb-2">사용법:</h4>
+                  <h4 className="font-semibold text-red-700 mb-2">Usage:</h4>
                   <p className="text-red-600">{selectedGrammar.usage}</p>
                 </div>
 
                 <div>
-                  <h4 className="korean-text font-semibold text-red-700 mb-2">예문:</h4>
+                  <h4 className="font-semibold text-red-700 mb-2">Examples:</h4>
                   <div className="space-y-3">
                     {selectedGrammar.examples.map((example, index) => (
                       <div key={index} className="bg-red-50 p-4 rounded-lg">
