@@ -133,7 +133,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onEnterMuseum }) => {
           className="english-text text-blue-300 mt-4 text-sm"
         >
           Enter the Museum
-        </p>
+        </motion.p>
       </div>
     </motion.div>
   );
