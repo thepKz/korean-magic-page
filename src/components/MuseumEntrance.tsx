@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { BookOpen, Zap, Crown, ArrowLeft, Notebook } from 'lucide-react';
+import { BookOpen, Zap, Crown, ArrowLeft, Facebook as Notebook } from 'lucide-react';
 import { GrammarLevel } from '../types/grammar';
 
 interface MuseumEntranceProps {

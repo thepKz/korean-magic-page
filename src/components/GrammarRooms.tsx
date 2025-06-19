@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, BookOpen, Play, Save, Notebook, Star, Volume2 } from 'lucide-react';
+import { ArrowLeft, BookOpen, Play, Save, Facebook as Notebook, Star, Volume2 } from 'lucide-react';
 import { GrammarLevel, GrammarPoint } from '../types/grammar';
 
 interface GrammarRoomsProps {
