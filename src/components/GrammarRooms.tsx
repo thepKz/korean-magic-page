@@ -67,19 +67,199 @@ const GrammarRooms: React.FC<GrammarRoomsProps> = ({
     intermediate: [
       {
         id: 'int-1',
-        korean: '-(으)ㄹ 것 같다',
-        english: 'It seems like / I think',
-        structure: 'Verb stem + (으)ㄹ 것 같다',
+        korean: 'N 밖에 + 부정',
+        english: 'Only / Nothing but',
+        structure: 'Noun + 밖에 + negative verb',
         examples: [
           {
-            korean: '비가 올 것 같아요.',
-            english: 'It seems like it will rain.',
-            romanization: 'Biga ol geot gatayo.'
+            korean: '오빠밖에 사랑하지 않아요.',
+            english: 'I only love my older brother.',
+            romanization: 'Oppabakke saranghaji anayo.'
           },
           {
-            korean: '그 사람이 올 것 같지 않아요.',
-            english: 'I don\'t think that person will come.',
-            romanization: 'Geu sarami ol geot gatji anayo.'
+            korean: '한국어밖에 할 줄 몰라요.',
+            english: 'I only know how to speak Korean.',
+            romanization: 'Hangugeobakke hal jul mollayo.'
+          }
+        ],
+        usage: 'Used to express "only" or "nothing but" with negative verbs',
+        level: 'intermediate'
+      },
+      {
+        id: 'int-2',
+        korean: 'N(이)라고 하다',
+        english: 'To be called / To say that',
+        structure: 'Noun + (이)라고 하다',
+        examples: [
+          {
+            korean: '한국어를 베트남말로 띠엔 한이라고 해요.',
+            english: 'Korean is called "Tieng Han" in Vietnamese.',
+            romanization: 'Hangugeoreul beteunamallo ttien hanirago haeyo.'
+          },
+          {
+            korean: '이 음식을 김치라고 해요.',
+            english: 'This food is called kimchi.',
+            romanization: 'I eumsigeul gimchirago haeyo.'
+          }
+        ],
+        usage: 'Used to say what something is called or to quote what someone said',
+        level: 'intermediate'
+      },
+      {
+        id: 'int-3',
+        korean: 'V게 되다',
+        english: 'To come to / To end up',
+        structure: 'Verb stem + 게 되다',
+        examples: [
+          {
+            korean: '이번 학기에 장학금을 받게 되었어요.',
+            english: 'I came to receive a scholarship this semester.',
+            romanization: 'Ibeon hakgie janghakgeumeul batge doeeosseoyo.'
+          },
+          {
+            korean: '한국에서 살게 되었어요.',
+            english: 'I ended up living in Korea.',
+            romanization: 'Hangugeseo salge doeeosseoyo.'
+          }
+        ],
+        usage: 'Used to express a change in situation or state that happened naturally',
+        level: 'intermediate'
+      },
+      {
+        id: 'int-4',
+        korean: 'V(으)ㄹ 생각이다',
+        english: 'To plan to / To intend to',
+        structure: 'Verb stem + (으)ㄹ 생각이다',
+        examples: [
+          {
+            korean: '유학할 생각이에요.',
+            english: 'I plan to study abroad.',
+            romanization: 'Yuhakhal saenggagieyo.'
+          },
+          {
+            korean: '내년에 결혼할 생각이에요.',
+            english: 'I plan to get married next year.',
+            romanization: 'Naenyeone gyeolhonhal saenggagieyo.'
+          }
+        ],
+        usage: 'Used to express plans or intentions',
+        level: 'intermediate'
+      },
+      {
+        id: 'int-5',
+        korean: 'V는 길이다/길에',
+        english: 'On the way to',
+        structure: 'Verb stem + 는 길이다/길에',
+        examples: [
+          {
+            korean: '밥을 먹으러 가는 길이에요.',
+            english: 'I\'m on my way to eat.',
+            romanization: 'Babeul meogeuro ganeun girieyo.'
+          },
+          {
+            korean: '집에 가는 길에 마트에 들렀어요.',
+            english: 'I stopped by the mart on my way home.',
+            romanization: 'Jibe ganeun gire mateue deulleosseoyo.'
+          }
+        ],
+        usage: 'Used to express being on the way to do something',
+        level: 'intermediate'
+      },
+      {
+        id: 'int-6',
+        korean: 'V(으)ㄴ/N 덕분에',
+        english: 'Thanks to / Because of',
+        structure: 'Verb/Noun + 덕분에',
+        examples: [
+          {
+            korean: '열심히 공부한 덕분에 한국어 실력이 좋아졌어요.',
+            english: 'Thanks to studying hard, my Korean skills improved.',
+            romanization: 'Yeolsimhi gongbuhan deokbune hangugeo sillyeogi joajyeosseoyo.'
+          },
+          {
+            korean: '선생님 덕분에 시험에 합격했어요.',
+            english: 'Thanks to my teacher, I passed the exam.',
+            romanization: 'Seonsaengnim deokbune siheome hapgyeokhaesseoyo.'
+          }
+        ],
+        usage: 'Used to express gratitude or positive causation',
+        level: 'intermediate'
+      },
+      {
+        id: 'int-7',
+        korean: 'V나요?/A(으)ㄴ가요?',
+        english: 'Polite question ending',
+        structure: 'Verb + 나요? / Adjective + (으)ㄴ가요?',
+        examples: [
+          {
+            korean: '운동하나요?',
+            english: 'Do you exercise?',
+            romanization: 'Undonghanayor?'
+          },
+          {
+            korean: '바쁜가요?',
+            english: 'Are you busy?',
+            romanization: 'Bappeungayo?'
+          }
+        ],
+        usage: 'Polite and respectful way to ask questions',
+        level: 'intermediate'
+      },
+      {
+        id: 'int-8',
+        korean: 'V는 게 좋다',
+        english: 'It\'s better to',
+        structure: 'Verb stem + 는 게 좋다',
+        examples: [
+          {
+            korean: '일찍 자는 게 좋겠어요.',
+            english: 'It would be better to sleep early.',
+            romanization: 'Iljjik janeun ge jokesseoyo.'
+          },
+          {
+            korean: '미리 준비하는 게 좋아요.',
+            english: 'It\'s better to prepare in advance.',
+            romanization: 'Miri junbihaneun ge joayo.'
+          }
+        ],
+        usage: 'Used to give advice or express what would be better',
+        level: 'intermediate'
+      },
+      {
+        id: 'int-9',
+        korean: 'A아/어 보이다',
+        english: 'To look / To seem',
+        structure: 'Adjective stem + 아/어 보이다',
+        examples: [
+          {
+            korean: '요즘 날씬해 보여요.',
+            english: 'You look slim these days.',
+            romanization: 'Yojeum nalssinhae boyeoyo.'
+          },
+          {
+            korean: '피곤해 보여요.',
+            english: 'You look tired.',
+            romanization: 'Pigonhae boyeoyo.'
+          }
+        ],
+        usage: 'Used to express how something appears or looks',
+        level: 'intermediate'
+      },
+      {
+        id: 'int-10',
+        korean: 'V는/A(으)ㄴ 것 같다',
+        english: 'It seems like / I think',
+        structure: 'Verb/Adjective + 것 같다',
+        examples: [
+          {
+            korean: '한국어가 어려운 것 같아요.',
+            english: 'Korean seems difficult.',
+            romanization: 'Hangugeoga eoryeoun geot gatayo.'
+          },
+          {
+            korean: '비가 오는 것 같아요.',
+            english: 'It seems like it\'s raining.',
+            romanization: 'Biga oneun geot gatayo.'
           }
         ],
         usage: 'Used to express assumption or probability',
@@ -197,6 +377,11 @@ const GrammarRooms: React.FC<GrammarRoomsProps> = ({
         <p className="text-xl english-text text-blue-200">
           {levelInfo[level].english}
         </p>
+        {level === 'intermediate' && (
+          <p className="text-sm korean-text text-blue-300 mt-2">
+            TOPIK 3급 문법 및 어휘 전시관
+          </p>
+        )}
       </motion.div>
 
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -207,40 +392,42 @@ const GrammarRooms: React.FC<GrammarRoomsProps> = ({
             문법 전시품
           </h2>
           
-          {currentGrammarPoints.map((grammar, index) => (
-            <motion.div
-              key={grammar.id}
-              initial={{ x: -50, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ delay: index * 0.1 }}
-              whileHover={{ scale: 1.02, x: 10 }}
-              onClick={() => handleGrammarSelect(grammar)}
-              className={`${levelInfo[level].bgColor} border border-white/20 rounded-xl p-6 cursor-pointer backdrop-blur-sm hover:backdrop-blur-md transition-all duration-300 group ${
-                selectedGrammar?.id === grammar.id ? 'ring-2 ring-white/50' : ''
-              }`}
-            >
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <h3 className="text-xl font-bold korean-text text-white mb-2 group-hover:scale-105 transition-transform">
-                    {grammar.korean}
-                  </h3>
-                  <p className="english-text text-blue-200 mb-2">
-                    {grammar.english}
-                  </p>
-                  <p className="text-sm text-white/60 font-mono">
-                    {grammar.structure}
-                  </p>
+          <div className="max-h-[70vh] overflow-y-auto space-y-4 pr-2">
+            {currentGrammarPoints.map((grammar, index) => (
+              <motion.div
+                key={grammar.id}
+                initial={{ x: -50, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ delay: index * 0.05 }}
+                whileHover={{ scale: 1.02, x: 10 }}
+                onClick={() => handleGrammarSelect(grammar)}
+                className={`${levelInfo[level].bgColor} border border-white/20 rounded-xl p-6 cursor-pointer backdrop-blur-sm hover:backdrop-blur-md transition-all duration-300 group ${
+                  selectedGrammar?.id === grammar.id ? 'ring-2 ring-white/50' : ''
+                }`}
+              >
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <h3 className="text-xl font-bold korean-text text-white mb-2 group-hover:scale-105 transition-transform">
+                      {grammar.korean}
+                    </h3>
+                    <p className="english-text text-blue-200 mb-2">
+                      {grammar.english}
+                    </p>
+                    <p className="text-sm text-white/60 font-mono">
+                      {grammar.structure}
+                    </p>
+                  </div>
+                  <motion.div
+                    whileHover={{ rotate: 360 }}
+                    transition={{ duration: 0.5 }}
+                    className="text-2xl"
+                  >
+                    🎨
+                  </motion.div>
                 </div>
-                <motion.div
-                  whileHover={{ rotate: 360 }}
-                  transition={{ duration: 0.5 }}
-                  className="text-2xl"
-                >
-                  🎨
-                </motion.div>
-              </div>
-            </motion.div>
-          ))}
+              </motion.div>
+            ))}
+          </div>
         </div>
 
         {/* Grammar Detail Panel */}
@@ -373,6 +560,16 @@ const GrammarRooms: React.FC<GrammarRoomsProps> = ({
                 <p className="english-text text-blue-300">
                   Select an exhibition piece to explore
                 </p>
+                {level === 'intermediate' && (
+                  <div className="mt-4 p-4 bg-blue-500/10 rounded-lg border border-blue-400/30">
+                    <p className="korean-text text-blue-200 text-sm">
+                      💡 TOPIK 3급 수준의 문법과 어휘를 학습할 수 있습니다
+                    </p>
+                    <p className="english-text text-blue-300 text-xs mt-1">
+                      Learn TOPIK Level 3 grammar and vocabulary
+                    </p>
+                  </div>
+                )}
               </motion.div>
             )}
           </AnimatePresence>
