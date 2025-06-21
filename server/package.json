@@ -10,20 +10,26 @@
     "seed": "node scripts/seedData.js"
   },
   "dependencies": {
-    "express": "^4.18.2",
-    "mongoose": "^8.0.3",
+    "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
-    "bcryptjs": "^2.4.3",
-    "jsonwebtoken": "^9.0.2",
+    "express": "^4.18.2",
     "express-rate-limit": "^7.1.5",
+    "express-validator": "^7.0.1",
     "helmet": "^7.1.0",
-    "express-validator": "^7.0.1"
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.0.3",
+    "openai": "^5.6.0"
   },
   "devDependencies": {
     "nodemon": "^3.0.2"
   },
-  "keywords": ["korean", "grammar", "education", "topik"],
+  "keywords": [
+    "korean",
+    "grammar",
+    "education",
+    "topik"
+  ],
   "author": "Korean Grammar Museum",
   "license": "MIT"
 }

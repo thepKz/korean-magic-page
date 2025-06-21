@@ -141,7 +141,6 @@ const userProgressSchema = new mongoose.Schema({
 });
 
 // Indexes
-userProgressSchema.index({ userId: 1 });
 userProgressSchema.index({ 'savedGrammar.grammarId': 1 });
 userProgressSchema.index({ lastActiveAt: -1 });
 

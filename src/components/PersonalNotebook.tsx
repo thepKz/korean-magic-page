@@ -1,275 +1,132 @@
+import { AnimatePresence, motion } from 'framer-motion';
+import { ArrowLeft, Book, ChevronRight } from 'lucide-react';
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, BookOpen, Star, Search } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
 import { GrammarPoint } from '../types/grammar';
 
 interface PersonalNotebookProps {
   savedGrammar: GrammarPoint[];
-  onBack: () => void;
 }
 
-const PersonalNotebook: React.FC<PersonalNotebookProps> = ({ 
-  savedGrammar, 
-  onBack 
-}) => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedGrammar, setSelectedGrammar] = useState<GrammarPoint | null>(null);
-  const [currentPage, setCurrentPage] = useState(0);
+const PersonalNotebook: React.FC<PersonalNotebookProps> = ({ savedGrammar }) => {
+  const navigate = useNavigate();
+  const [expanded, setExpanded] = useState<string | null>(null);
 
-  const filteredGrammar = savedGrammar.filter(grammar =>
-    grammar.korean.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    grammar.english.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Dummy data for now - replace with actual data fetching based on savedGrammar ids
+  const grammarDetails = {
+    'int-1': { 
+      korean: 'N 밖에 + 부정', 
+      english: 'Only / Nothing but', 
+      structure: 'Noun + 밖에 + negative verb',
+      usage: 'Used to express "only" or "nothing but" with negative verbs' 
+    },
+    'int-2': { 
+      korean: 'N(이)라고 하다', 
+      english: 'To be called / To say that',
+      structure: 'Noun + (이)라고 하다',
+      usage: 'Used to say what something is called or to quote what someone said'
+    },
+     // ... add other grammar details
+  };
 
-  const itemsPerPage = 6;
-  const totalPages = Math.ceil(filteredGrammar.length / itemsPerPage);
-  const currentItems = filteredGrammar.slice(
-    currentPage * itemsPerPage,
-    (currentPage + 1) * itemsPerPage
-  );
+  const notebookItems = savedGrammar.map(id => grammarDetails[id as keyof typeof grammarDetails]).filter(Boolean);
 
   return (
     <motion.div
-      initial={{ opacity: 0, rotateY: -90 }}
-      animate={{ opacity: 1, rotateY: 0 }}
-      exit={{ opacity: 0, rotateY: 90 }}
-      transition={{ duration: 0.6 }}
-      className="min-h-screen p-4"
+      initial={{ opacity: 0, x: -100 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: 100 }}
+      className="min-h-screen bg-gray-900/50 p-8"
     >
-      {/* Header */}
-      <div className="flex items-center justify-between mb-8">
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={onBack}
-          className="flex items-center gap-2 text-white/80 hover:text-white transition-colors"
-        >
-          <ArrowLeft className="w-5 h-5" />
-          <span>Back</span>
-        </motion.button>
+      <div className="max-w-4xl mx-auto">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-8">
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => navigate(-1)}
+            className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
+          >
+            <ArrowLeft className="w-5 h-5" />
+            <span className="korean-text">돌아가기</span>
+          </motion.button>
+          
+          <div className="flex items-center gap-3">
+            <Book className="w-8 h-8 text-blue-400" />
+            <h1 className="text-3xl font-bold text-white korean-text">개인 노트</h1>
+          </div>
 
-        <div className="flex items-center gap-2">
-          <BookOpen className="w-6 h-6 text-white" />
-          <h1 className="text-2xl font-bold text-white">
-            My Notes
-          </h1>
+          <div className="w-20"></div>
+        </div>
+
+        {/* Notebook Content */}
+        <div className="space-y-4">
+          <AnimatePresence>
+            {notebookItems.length > 0 ? (
+              notebookItems.map((item, index) => (
+                <motion.div
+                  key={item.korean}
+                  layout
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0, transition: { delay: index * 0.1 } }}
+                  exit={{ opacity: 0 }}
+                  className="bg-white/10 backdrop-blur-md rounded-lg border border-white/20 overflow-hidden"
+                >
+                  <button
+                    onClick={() => setExpanded(expanded === item.korean ? null : item.korean)}
+                    className="w-full flex items-center justify-between p-4 text-left"
+                  >
+                    <div className="flex items-center gap-4">
+                      <span className="text-blue-300 font-bold">{index + 1}.</span>
+                      <h2 className="text-lg text-white font-medium korean-text">{item.korean}</h2>
+                      <p className="text-gray-400 hidden md:block">- {item.english}</p>
+                    </div>
+                    <motion.div animate={{ rotate: expanded === item.korean ? 90 : 0 }}>
+                      <ChevronRight className="w-5 h-5 text-gray-400" />
+                    </motion.div>
+                  </button>
+
+                  <AnimatePresence>
+                    {expanded === item.korean && (
+                      <motion.div
+                        layout
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="px-6 pb-4"
+                      >
+                        <div className="border-t border-white/20 pt-4">
+                          <p className="text-gray-300 mb-2"><strong className="text-white">Structure:</strong> {item.structure}</p>
+                          <p className="text-gray-300"><strong className="text-white">Usage:</strong> {item.usage}</p>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </motion.div>
+              ))
+            ) : (
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="text-center py-20"
+              >
+                <Book className="w-16 h-16 mx-auto text-gray-600 mb-4" />
+                <h3 className="text-xl text-white korean-text mb-2">노트가 비어있습니다</h3>
+                <p className="text-gray-400 mb-6">문법을 저장하여 나만의 노트를 만들어보세요.</p>
+                <Link to="/entrance">
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg"
+                  >
+                    문법 배우러 가기
+                  </motion.button>
+                </Link>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
-
-      {/* Notebook Container */}
-      <div className="max-w-6xl mx-auto">
-        <motion.div
-          initial={{ scale: 0.9, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ delay: 0.2 }}
-          className="bg-gradient-to-br from-amber-50 to-orange-100 rounded-3xl shadow-2xl overflow-hidden"
-          style={{
-            background: 'linear-gradient(135deg, #fef7cd 0%, #fde68a 50%, #f59e0b 100%)',
-            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
-          }}
-        >
-          {/* Notebook Binding */}
-          <div className="flex">
-            <div className="w-16 bg-gradient-to-b from-red-600 to-red-800 flex flex-col items-center py-8 gap-4">
-              {[...Array(8)].map((_, i) => (
-                <div key={i} className="w-3 h-3 bg-yellow-300 rounded-full shadow-inner" />
-              ))}
-            </div>
-
-            {/* Notebook Content */}
-            <div className="flex-1 p-8">
-              {/* Notebook Header */}
-              <div className="border-b-2 border-red-300 pb-6 mb-8">
-                <h2 className="text-3xl font-bold text-red-800 mb-2">
-                  My Grammar Notes
-                </h2>
-                <p className="text-red-600">
-                  나의 문법 노트
-                </p>
-                
-                {/* Search Bar */}
-                <div className="mt-4 relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-red-400" />
-                  <input
-                    type="text"
-                    placeholder="Search grammar... (문법 검색...)"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 bg-white/70 border-2 border-red-200 rounded-lg focus:border-red-400 focus:outline-none"
-                  />
-                </div>
-              </div>
-
-              {/* Content */}
-              {savedGrammar.length === 0 ? (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="text-center py-16"
-                >
-                  <div className="text-6xl mb-4">📝</div>
-                  <h3 className="text-red-700 text-xl mb-2">
-                    No saved grammar yet
-                  </h3>
-                  <p className="text-red-500">
-                    아직 저장된 문법이 없습니다
-                  </p>
-                  <p className="text-red-600 mt-4">
-                    Save grammar points from the study rooms!
-                  </p>
-                </motion.div>
-              ) : (
-                <>
-                  {/* Grammar Grid */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-                    <AnimatePresence mode="popLayout">
-                      {currentItems.map((grammar, index) => (
-                        <motion.div
-                          key={grammar.id}
-                          layout
-                          initial={{ opacity: 0, scale: 0.8, rotateX: -90 }}
-                          animate={{ opacity: 1, scale: 1, rotateX: 0 }}
-                          exit={{ opacity: 0, scale: 0.8, rotateX: 90 }}
-                          transition={{ 
-                            duration: 0.3,
-                            delay: index * 0.1,
-                            type: "spring",
-                            stiffness: 100
-                          }}
-                          whileHover={{ 
-                            scale: 1.05, 
-                            rotateY: 5,
-                            boxShadow: "0 10px 25px rgba(0,0,0,0.2)"
-                          }}
-                          onClick={() => setSelectedGrammar(grammar)}
-                          className="bg-white/80 backdrop-blur-sm rounded-xl p-6 cursor-pointer border-2 border-red-200 hover:border-red-400 transition-all duration-300 group"
-                        >
-                          {/* Level Badge */}
-                          <div className="flex items-center justify-between mb-4">
-                            <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                              grammar.level === 'beginner' ? 'bg-green-200 text-green-800' :
-                              grammar.level === 'intermediate' ? 'bg-blue-200 text-blue-800' :
-                              'bg-purple-200 text-purple-800'
-                            }`}>
-                              {grammar.level === 'beginner' ? 'Beginner' :
-                               grammar.level === 'intermediate' ? 'Intermediate' : 'Advanced'}
-                            </span>
-                            <Star className="w-5 h-5 text-yellow-500 group-hover:scale-110 transition-transform" />
-                          </div>
-
-                          {/* Grammar Content */}
-                          <h4 className="korean-text text-red-800 font-bold text-lg mb-2 group-hover:scale-105 transition-transform">
-                            {grammar.korean}
-                          </h4>
-                          <p className="english-text text-red-600 mb-3">
-                            {grammar.english}
-                          </p>
-                          <p className="text-sm text-red-500 font-mono bg-red-50 p-2 rounded">
-                            {grammar.structure}
-                          </p>
-                        </motion.div>
-                      ))}
-                    </AnimatePresence>
-                  </div>
-
-                  {/* Pagination */}
-                  {totalPages > 1 && (
-                    <div className="flex justify-center gap-2">
-                      {[...Array(totalPages)].map((_, index) => (
-                        <motion.button
-                          key={index}
-                          whileHover={{ scale: 1.1 }}
-                          whileTap={{ scale: 0.9 }}
-                          onClick={() => setCurrentPage(index)}
-                          className={`w-10 h-10 rounded-full font-semibold transition-colors ${
-                            currentPage === index
-                              ? 'bg-red-600 text-white'
-                              : 'bg-red-200 text-red-600 hover:bg-red-300'
-                          }`}
-                        >
-                          {index + 1}
-                        </motion.button>
-                      ))}
-                    </div>
-                  )}
-                </>
-              )}
-            </div>
-          </div>
-        </motion.div>
-      </div>
-
-      {/* Grammar Detail Modal */}
-      <AnimatePresence>
-        {selectedGrammar && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50"
-            onClick={() => setSelectedGrammar(null)}
-          >
-            <motion.div
-              initial={{ scale: 0.8, rotateY: -90 }}
-              animate={{ scale: 1, rotateY: 0 }}
-              exit={{ scale: 0.8, rotateY: 90 }}
-              transition={{ type: "spring", stiffness: 100 }}
-              onClick={(e) => e.stopPropagation()}
-              className="bg-white rounded-2xl p-8 max-w-2xl w-full max-h-[80vh] overflow-y-auto"
-            >
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="korean-text text-2xl font-bold text-red-800">
-                  {selectedGrammar.korean}
-                </h3>
-                <button
-                  onClick={() => setSelectedGrammar(null)}
-                  className="text-red-400 hover:text-red-600 transition-colors"
-                >
-                  ✕
-                </button>
-              </div>
-
-              <div className="space-y-6">
-                <div>
-                  <h4 className="font-semibold text-red-700 mb-2">English:</h4>
-                  <p className="text-red-600">{selectedGrammar.english}</p>
-                </div>
-
-                <div>
-                  <h4 className="font-semibold text-red-700 mb-2">Structure:</h4>
-                  <p className="font-mono bg-red-50 p-3 rounded text-red-800">
-                    {selectedGrammar.structure}
-                  </p>
-                </div>
-
-                <div>
-                  <h4 className="font-semibold text-red-700 mb-2">Usage:</h4>
-                  <p className="text-red-600">{selectedGrammar.usage}</p>
-                </div>
-
-                <div>
-                  <h4 className="font-semibold text-red-700 mb-2">Examples:</h4>
-                  <div className="space-y-3">
-                    {selectedGrammar.examples.map((example, index) => (
-                      <div key={index} className="bg-red-50 p-4 rounded-lg">
-                        <p className="korean-text font-medium text-red-800 mb-1">
-                          {example.korean}
-                        </p>
-                        <p className="english-text text-red-600 mb-1">
-                          {example.english}
-                        </p>
-                        <p className="text-sm text-red-500 font-mono">
-                          {example.romanization}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </motion.div>
   );
 };

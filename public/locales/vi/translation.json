@@ -1,0 +1,72 @@
+{
+  "entrance": {
+    "title": "Chọn Trình Độ Của Bạn",
+    "subtitle": "Lựa chọn con đường học tập của bạn",
+    "back": "Quay Lại",
+    "admin": "Quản trị",
+    "login": "Đăng Nhập / Đăng Ký",
+    "profile": "Hồ Sơ"
+  },
+  "levels": {
+    "beginner": "Sơ Cấp",
+    "intermediate": "Trung Cấp",
+    "advanced": "Cao Cấp"
+  },
+  "features": {
+    "notes": "Ghi Chú Của Tôi",
+    "notes_desc": "Xem ngữ pháp đã lưu",
+    "flashcards": "Thẻ Ghi Nhớ",
+    "flashcards_desc": "Ôn tập với thẻ",
+    "games": "Trò Chơi Ngữ Pháp",
+    "games_desc": "Học qua trò chơi",
+    "interactive_games": "Trò Chơi Tương Tác",
+    "interactive_games_desc": "Nhiều chế độ chơi",
+    "progress": "Tiến Độ Học Tập",
+    "progress_desc": "Kiểm tra tiến độ của bạn",
+    "analytics": "Phân Tích",
+    "analytics_desc": "Phân tích học tập chi tiết"
+  },
+  "coming_soon": "Sắp Ra Mắt",
+  "rooms": {
+    "back": "Quay Lại",
+    "my_notes": "Ghi Chú Của Tôi",
+    "random": "Ngẫu Nhiên",
+    "select_prompt": "Chọn một điểm ngữ pháp",
+    "study_prompt": "Chọn một điểm ngữ pháp để học",
+    "total_grammar": "Tổng Ngữ Pháp",
+    "correct": "Đúng",
+    "streak": "Chuỗi",
+    "save_note": "Lưu vào Ghi Chú",
+    "saved_success": "Đã lưu!",
+    "examples": "Ví dụ",
+    "quiz_challenge": "Thử Thách Trắc Nghiệm",
+    "start_quiz": "Bắt Đầu",
+    "search_placeholder": "Tìm kiếm ngữ pháp..."
+  },
+  "auth": {
+    "login": "Đăng nhập",
+    "register": "Đăng ký",
+    "username": "Tên người dùng",
+    "email": "Email",
+    "password": "Mật khẩu",
+    "confirm_password": "Xác nhận mật khẩu",
+    "passwords_do_not_match": "Mật khẩu không khớp.",
+    "error_occurred": "Có lỗi xảy ra.",
+    "processing": "Đang xử lý...",
+    "no_account": "Chưa có tài khoản?",
+    "have_account": "Đã có tài khoản?"
+  },
+  "common": {
+    "back": "Quay lại",
+    "loading": "Đang tải...",
+    "error": "Lỗi",
+    "save": "Lưu",
+    "saved": "Đã lưu",
+    "coming_soon": "Sắp ra mắt"
+  },
+  "grammar": {
+    "listen": "Nghe",
+    "explain_with_ai": "Giải thích với AI",
+    "explanation_placeholder": "Nhấn vào 'Giải thích với AI' để nhận giải thích chi tiết."
+  }
+} 

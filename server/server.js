@@ -11,6 +11,7 @@ import grammarRoutes from './routes/grammar.js';
 import userRoutes from './routes/user.js';
 import progressRoutes from './routes/progress.js';
 import quizRoutes from './routes/quiz.js';
+import aiRoutes from './routes/ai.js';
 
 dotenv.config();
 
@@ -54,6 +55,7 @@ app.use('/api/grammar', grammarRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/progress', progressRoutes);
 app.use('/api/quiz', quizRoutes);
+app.use('/api/ai', aiRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

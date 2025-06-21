@@ -1,9 +1,10 @@
-import { useState, useEffect, createContext, useContext } from 'react';
+import { useState, useEffect, createContext, useContext, ReactNode } from 'react';
 
 interface User {
   id: string;
   username: string;
   email: string;
+  role: 'user' | 'admin';
   profile: {
     displayName: string;
     avatar: string;
@@ -35,6 +36,15 @@ export const useAuth = () => {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
+};
+
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
+  const auth = useAuthState();
+  return (
+    <AuthContext.Provider value={auth}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
 export const useAuthState = () => {

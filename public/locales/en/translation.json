@@ -1,0 +1,72 @@
+{
+  "entrance": {
+    "title": "Choose Your Level",
+    "subtitle": "Select your learning path",
+    "back": "Back",
+    "admin": "Admin",
+    "login": "Login / Register",
+    "profile": "Profile"
+  },
+  "levels": {
+    "beginner": "Beginner",
+    "intermediate": "Intermediate",
+    "advanced": "Advanced"
+  },
+  "features": {
+    "notes": "My Notes",
+    "notes_desc": "View saved grammar",
+    "flashcards": "Flashcards",
+    "flashcards_desc": "Review with cards",
+    "games": "Grammar Games",
+    "games_desc": "Learn through games",
+    "interactive_games": "Interactive Games",
+    "interactive_games_desc": "Various game modes",
+    "progress": "Study Progress",
+    "progress_desc": "Check your progress",
+    "analytics": "Analytics",
+    "analytics_desc": "Detailed study analysis"
+  },
+  "coming_soon": "Coming Soon",
+  "rooms": {
+    "back": "Back",
+    "my_notes": "My Notes",
+    "random": "Random",
+    "select_prompt": "Select a grammar point",
+    "study_prompt": "Choose a grammar point to study",
+    "total_grammar": "Total Grammar",
+    "correct": "Correct",
+    "streak": "Streak",
+    "save_note": "Save to My Notes",
+    "saved_success": "Saved!",
+    "examples": "Examples",
+    "quiz_challenge": "Quiz Challenge",
+    "start_quiz": "Start Quiz",
+    "search_placeholder": "Search grammar..."
+  },
+  "auth": {
+    "login": "Login",
+    "register": "Register",
+    "username": "Username",
+    "email": "Email",
+    "password": "Password",
+    "confirm_password": "Confirm Password",
+    "passwords_do_not_match": "Passwords do not match.",
+    "error_occurred": "An error occurred.",
+    "processing": "Processing...",
+    "no_account": "Don't have an account?",
+    "have_account": "Already have an account?"
+  },
+  "common": {
+    "back": "Back",
+    "loading": "Loading...",
+    "error": "Error",
+    "save": "Save",
+    "saved": "Saved",
+    "coming_soon": "Coming Soon"
+  },
+  "grammar": {
+    "listen": "Listen",
+    "explain_with_ai": "Explain with AI",
+    "explanation_placeholder": "Click 'Explain with AI' to get a detailed explanation."
+  }
+} 

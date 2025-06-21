@@ -1,6 +1,7 @@
+import { AnimatePresence, motion } from 'framer-motion';
+import { Eye, EyeOff, Loader, Lock, Mail, User, X } from 'lucide-react';
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { X, Mail, Lock, User, Eye, EyeOff, Loader } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -10,6 +11,7 @@ interface AuthModalProps {
 }
 
 const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin, onRegister }) => {
+  const { t } = useTranslation();
   const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({
     username: '',
@@ -31,14 +33,14 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin, onRegis
         await onLogin(formData.email, formData.password);
       } else {
         if (formData.password !== formData.confirmPassword) {
-          setError('비밀번호가 일치하지 않습니다.');
+          setError(t('auth.passwords_do_not_match'));
           return;
         }
         await onRegister(formData.username, formData.email, formData.password);
       }
       onClose();
     } catch (err: any) {
-      setError(err.message || '오류가 발생했습니다.');
+      setError(err.message || t('auth.error_occurred'));
     } finally {
       setLoading(false);
     }
@@ -72,7 +74,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin, onRegis
           {/* Header */}
           <div className="flex items-center justify-between mb-6">
             <h2 className="korean-text text-white text-2xl font-bold">
-              {isLogin ? '로그인' : '회원가입'}
+              {isLogin ? t('auth.login') : t('auth.register')}
             </h2>
             <button
               onClick={onClose}
@@ -90,7 +92,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin, onRegis
                 <input
                   type="text"
                   name="username"
-                  placeholder="사용자명"
+                  placeholder={t('auth.username')}
                   value={formData.username}
                   onChange={handleInputChange}
                   required
@@ -104,7 +106,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin, onRegis
               <input
                 type="email"
                 name="email"
-                placeholder="이메일"
+                placeholder={t('auth.email')}
                 value={formData.email}
                 onChange={handleInputChange}
                 required
@@ -117,7 +119,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin, onRegis
               <input
                 type={showPassword ? 'text' : 'password'}
                 name="password"
-                placeholder="비밀번호"
+                placeholder={t('auth.password')}
                 value={formData.password}
                 onChange={handleInputChange}
                 required
@@ -138,7 +140,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin, onRegis
                 <input
                   type={showPassword ? 'text' : 'password'}
                   name="confirmPassword"
-                  placeholder="비밀번호 확인"
+                  placeholder={t('auth.confirm_password')}
                   value={formData.confirmPassword}
                   onChange={handleInputChange}
                   required
@@ -153,7 +155,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin, onRegis
                 animate={{ opacity: 1, y: 0 }}
                 className="bg-red-500/20 border border-red-400/30 rounded-lg p-3"
               >
-                <p className="text-red-300 text-sm korean-text">{error}</p>
+                <p className="text-red-300 text-sm">{error}</p>
               </motion.div>
             )}
 
@@ -162,29 +164,29 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin, onRegis
               whileTap={{ scale: 0.98 }}
               type="submit"
               disabled={loading}
-              className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white py-3 rounded-lg font-medium korean-text transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white py-3 rounded-lg font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {loading ? (
                 <>
                   <Loader className="w-5 h-5 animate-spin" />
-                  처리 중...
+                  {t('auth.processing')}
                 </>
               ) : (
-                isLogin ? '로그인' : '회원가입'
+                isLogin ? t('auth.login') : t('auth.register')
               )}
             </motion.button>
           </form>
 
           {/* Toggle */}
           <div className="mt-6 text-center">
-            <p className="text-gray-400 korean-text">
-              {isLogin ? '계정이 없으신가요?' : '이미 계정이 있으신가요?'}
+            <p className="text-gray-400">
+              {isLogin ? t('auth.no_account') : t('auth.have_account')}
             </p>
             <button
               onClick={() => setIsLogin(!isLogin)}
-              className="text-blue-400 hover:text-blue-300 korean-text font-medium mt-1"
+              className="text-blue-400 hover:text-blue-300 font-medium mt-1"
             >
-              {isLogin ? '회원가입' : '로그인'}
+              {isLogin ? t('auth.register') : t('auth.login')}
             </button>
           </div>
         </motion.div>

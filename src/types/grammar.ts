@@ -1,17 +1,27 @@
 export type GrammarLevel = 'beginner' | 'intermediate' | 'advanced';
 
+export interface GrammarExample {
+  korean: string;
+  english: string;
+  vietnamese: string;
+  romanization: string;
+}
+
 export interface GrammarPoint {
+  _id: string;
   id: string;
   korean: string;
   english: string;
+  vietnamese: string;
   structure: string;
-  examples: {
-    korean: string;
-    english: string;
-    romanization: string;
-  }[];
+  examples: GrammarExample[];
   usage: string;
   level: GrammarLevel;
+  topikLevel: number;
+  category: string;
+  difficulty: number;
+  tags: string[];
+  explanation: string;
 }
 
 export interface Room {
