@@ -39,7 +39,7 @@ export async function generateGrammarExplanation(grammarPoint, currentExplanatio
 
   try {
     const response = await openai.chat.completions.create({
-      model: "gpt-4o", // Or "gpt-3.5-turbo"
+      model: "gpt-4o-mini",
       messages: [
         {
           role: 'system',
@@ -51,7 +51,7 @@ export async function generateGrammarExplanation(grammarPoint, currentExplanatio
         }
       ],
       temperature: 0.7,
-      max_tokens: 500,
+      max_tokens: 2000,
     });
     return response.choices[0].message.content;
   } catch (error) {

@@ -50,6 +50,18 @@ const grammarSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  usageVi: {
+    type: String,
+    default: ''
+  },
+  explanation: {
+    type: String,
+    default: ''
+  },
+  explanationVi: {
+    type: String,
+    default: ''
+  },
   level: {
     type: String,
     enum: ['beginner', 'intermediate', 'advanced'],

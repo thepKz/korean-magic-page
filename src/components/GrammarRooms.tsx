@@ -1,10 +1,13 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { Check, Loader, Save, Search, Sparkles, Volume2 } from 'lucide-react';
+import { Check, Loader, Save, Search, Sparkles, Volume1, Volume2 } from 'lucide-react';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import ReactMarkdown from 'react-markdown';
 import { useParams } from 'react-router-dom';
+import remarkGfm from 'remark-gfm';
 import { useAuth } from '../hooks/useAuth.tsx';
 import { GrammarPoint } from '../types/grammar';
+import { localizeField } from '../utils/localize';
 
 const API_URL = (import.meta as any).env?.VITE_API_URL || 'http://localhost:5000/api';
 
@@ -115,7 +118,7 @@ const GrammarRooms: React.FC<GrammarRoomsProps> = ({ onSaveGrammar }) => {
   
   const filteredPoints = grammarPoints.filter(p => 
     p.korean.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    p.english.toLowerCase().includes(searchTerm.toLowerCase())
+    localizeField(p,'english','vietnamese').toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -147,7 +150,7 @@ const GrammarRooms: React.FC<GrammarRoomsProps> = ({ onSaveGrammar }) => {
                   className={`p-4 rounded-lg mb-2 cursor-pointer transition-colors border ${selectedGrammar?._id === gp._id ? 'bg-cyan-500/20 border-cyan-500' : 'bg-gray-700/50 hover:bg-gray-600/50 border-transparent'}`}
                 >
                   <h3 className="font-bold text-white korean-text text-lg">{gp.korean}</h3>
-                  <p className="text-sm text-gray-400">{gp.english}</p>
+                  <p className="text-sm text-gray-400">{localizeField(gp,'english','vietnamese')}</p>
                 </motion.div>
               ))}
             </AnimatePresence>
@@ -170,7 +173,7 @@ const GrammarRooms: React.FC<GrammarRoomsProps> = ({ onSaveGrammar }) => {
                 <div className="flex justify-between items-start mb-6">
                     <div>
                         <h2 className="text-3xl font-bold text-white korean-text">{selectedGrammar.korean}</h2>
-                        <p className="text-md text-gray-400">{selectedGrammar.english}</p>
+                        <p className="text-md text-gray-400">{localizeField(selectedGrammar,'english','vietnamese')}</p>
                     </div>
                     <div className="flex gap-2">
                       <button 
@@ -203,16 +206,45 @@ const GrammarRooms: React.FC<GrammarRoomsProps> = ({ onSaveGrammar }) => {
                     <motion.div 
                       initial={{ opacity: 0, y:10 }} 
                       animate={{ opacity: 1, y: 0 }}
-                      className="prose prose-invert max-w-none text-gray-300 p-4 bg-gray-900/50 rounded-lg mb-6 border border-blue-500/30"
+                      className="prose prose-invert max-w-none text-gray-300 p-4 bg-gray-900/50 rounded-lg mb-4 border border-blue-500/30"
                     >
-                      <p dangerouslySetInnerHTML={{ __html: (aiExplanation ?? '').replace(/\n/g, '<br />') }} />
+                      <ReactMarkdown remarkPlugins={[remarkGfm]}>{aiExplanation}</ReactMarkdown>
                     </motion.div>
                 )}
 
+                {/* Speak buttons for Korean lines inside AI explanation */}
+                {aiExplanation && (() => {
+                  const regex = /Câu tiếng Hàn:\s*([^\n]+)/g;
+                  const lines: string[] = [];
+                  let match;
+                  while ((match = regex.exec(aiExplanation)) !== null) {
+                    if (match[1]) {
+                      const cleaned = match[1]
+                        .replace(/^[*\-\s]+/, '') // bỏ bullet hoặc * ở đầu
+                        .replace(/\*\*/g, '')     // bỏ ** bold
+                        .trim();
+                      lines.push(cleaned);
+                    }
+                  }
+                  return lines.length ? (
+                    <div className="flex flex-wrap gap-2 mb-6">
+                      {lines.map((line, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => handleSpeak(line)}
+                          className="flex items-center gap-1 px-3 py-1 bg-gray-700/50 hover:bg-gray-600/70 text-cyan-300 rounded-lg text-sm"
+                        >
+                          <Volume1 size={16} /> {line}
+                        </button>
+                      ))}
+                    </div>
+                  ) : null;
+                })()}
+
                 {/* Original Explanation */}
-                {selectedGrammar.explanation ? (
+                {localizeField(selectedGrammar,'explanation','explanationVi') ? (
                   <div className="prose prose-invert max-w-none text-gray-300">
-                    <p dangerouslySetInnerHTML={{ __html: (selectedGrammar.explanation ?? '').replace(/\n/g, '<br />') }} />
+                    <p dangerouslySetInnerHTML={{ __html: (localizeField(selectedGrammar,'explanation','explanationVi') ?? '').replace(/\n/g, '<br />') }} />
                   </div>
                 ) : (
                   <p className="text-gray-400 italic">{t('grammar.explanation_placeholder')}</p>
@@ -220,7 +252,7 @@ const GrammarRooms: React.FC<GrammarRoomsProps> = ({ onSaveGrammar }) => {
                 
                 {/* Examples */}
                 <div className="mt-8">
-                    <h3 className="text-xl font-semibold text-white mb-4 korean-text">Ví dụ</h3>
+                    <h3 className="text-xl font-semibold text-white mb-4 korean-text">{t('rooms.examples')||'Ví dụ'}</h3>
                     {selectedGrammar.examples.map((ex, index) => (
                         <div key={index} className="mb-4 bg-gray-900/50 p-4 rounded-lg">
                             <div className="flex items-center justify-between">
@@ -229,7 +261,7 @@ const GrammarRooms: React.FC<GrammarRoomsProps> = ({ onSaveGrammar }) => {
                                     <Volume2 size={20} />
                                 </button>
                             </div>
-                            <p className="text-gray-400 text-sm mt-1">{ex.english}</p>
+                            <p className="text-gray-400 text-sm mt-1">{localizeField(ex,'english','vietnamese')}</p>
                         </div>
                     ))}
                 </div>

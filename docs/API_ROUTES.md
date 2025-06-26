@@ -612,3 +612,41 @@ All error responses follow this format:
 ---
 
 **Need help?** Check the health endpoint or contact the development team!
+
+## 🗂️ Deck & Flashcard Routes (v1)
+
+### GET `/decks`
+Danh sách deck của user + deck mặc định (isDefault=true).
+Query:
+- `mine=true` chỉ lấy deck sở hữu bởi user.
+
+### POST `/decks`
+Tạo deck mới.
+Body:
+```json
+{ "title": "string", "description": "string?" }
+```
+
+### GET `/decks/:id`
+Lấy chi tiết deck kèm thẻ.
+
+### POST `/decks/:id/flashcards`
+Thêm thẻ vào deck.
+Body:
+```json
+{ "cardId": "optional", "front": "string?", "back": "string?" }
+```
+
+### POST `/decks/:id/merge`
+Gộp deck.
+Body:
+```json
+{ "deckIds": ["id1", "id2"], "newTitle": "Merged" }
+```
+
+### POST `/flashcards`
+Tạo flashcard độc lập.
+Body:
+```json
+{ "front": "string", "back": "string", "grammarRef": "id?", "tags": [] }
+```

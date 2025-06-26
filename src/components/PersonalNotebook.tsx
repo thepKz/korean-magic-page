@@ -1,8 +1,9 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowLeft, Book, ChevronRight } from 'lucide-react';
-import React, { useState } from 'react';
+import { ArrowLeft, Book, ChevronRight, Loader } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { GrammarPoint } from '../types/grammar';
+import { localizeField } from '../utils/localize';
 
 interface PersonalNotebookProps {
   savedGrammar: GrammarPoint[];
@@ -11,25 +12,37 @@ interface PersonalNotebookProps {
 const PersonalNotebook: React.FC<PersonalNotebookProps> = ({ savedGrammar }) => {
   const navigate = useNavigate();
   const [expanded, setExpanded] = useState<string | null>(null);
+  const [loadingDetailId, setLoadingDetailId] = useState<string | null>(null);
+  const API_URL = (import.meta as any).env?.VITE_API_URL || 'http://localhost:5000/api';
 
-  // Dummy data for now - replace with actual data fetching based on savedGrammar ids
-  const grammarDetails = {
-    'int-1': { 
-      korean: 'N 밖에 + 부정', 
-      english: 'Only / Nothing but', 
-      structure: 'Noun + 밖에 + negative verb',
-      usage: 'Used to express "only" or "nothing but" with negative verbs' 
-    },
-    'int-2': { 
-      korean: 'N(이)라고 하다', 
-      english: 'To be called / To say that',
-      structure: 'Noun + (이)라고 하다',
-      usage: 'Used to say what something is called or to quote what someone said'
-    },
-     // ... add other grammar details
-  };
+  // Normalize savedGrammar in case items are wrapped in { grammarId }
+  const notebookItems: GrammarPoint[] = savedGrammar.map((item: any) => {
+    if (!item) return null;
+    return 'korean' in item ? item as GrammarPoint : (item.grammarId as GrammarPoint);
+  }).filter(Boolean) as GrammarPoint[];
 
-  const notebookItems = savedGrammar.map(id => grammarDetails[id as keyof typeof grammarDetails]).filter(Boolean);
+  // Fetch detail when expanded grammar lacks info
+  useEffect(() => {
+    const loadDetail = async () => {
+      if (!expanded) return;
+      const gp = notebookItems.find(i => i.korean === expanded);
+      if (!gp || (gp.structure && gp.usage)) return;
+      try {
+        setLoadingDetailId(gp._id);
+        const res = await fetch(`${API_URL}/grammar/${gp._id}`);
+        if (res.ok) {
+          const data = await res.json();
+          Object.assign(gp, data); // mutate local item
+        }
+      } catch (e) {
+        console.error('Load grammar detail error', e);
+      } finally {
+        setLoadingDetailId(null);
+      }
+    };
+    loadDetail();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [expanded]);
 
   return (
     <motion.div
@@ -79,7 +92,7 @@ const PersonalNotebook: React.FC<PersonalNotebookProps> = ({ savedGrammar }) => 
                     <div className="flex items-center gap-4">
                       <span className="text-blue-300 font-bold">{index + 1}.</span>
                       <h2 className="text-lg text-white font-medium korean-text">{item.korean}</h2>
-                      <p className="text-gray-400 hidden md:block">- {item.english}</p>
+                      <p className="text-gray-400 hidden md:block">- {localizeField(item,'english','vietnamese')}</p>
                     </div>
                     <motion.div animate={{ rotate: expanded === item.korean ? 90 : 0 }}>
                       <ChevronRight className="w-5 h-5 text-gray-400" />
@@ -96,8 +109,8 @@ const PersonalNotebook: React.FC<PersonalNotebookProps> = ({ savedGrammar }) => 
                         className="px-6 pb-4"
                       >
                         <div className="border-t border-white/20 pt-4">
-                          <p className="text-gray-300 mb-2"><strong className="text-white">Structure:</strong> {item.structure}</p>
-                          <p className="text-gray-300"><strong className="text-white">Usage:</strong> {item.usage}</p>
+                          <p className="text-gray-300 mb-2"><strong className="text-white">Structure:</strong> {item.structure || (loadingDetailId === item._id ? <Loader className="inline animate-spin" size={16}/> : '-')}</p>
+                          <p className="text-gray-300"><strong className="text-white">Usage:</strong> {localizeField(item,'usage','usageVi') || (loadingDetailId === item._id ? <Loader className="inline animate-spin" size={16}/> : '-')}</p>
                         </div>
                       </motion.div>
                     )}

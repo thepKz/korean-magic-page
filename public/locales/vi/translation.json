@@ -53,6 +53,8 @@
     "passwords_do_not_match": "Mật khẩu không khớp.",
     "error_occurred": "Có lỗi xảy ra.",
     "processing": "Đang xử lý...",
+    "logout": "Đăng xuất",
+    "login_success": "Đăng nhập thành công!",
     "no_account": "Chưa có tài khoản?",
     "have_account": "Đã có tài khoản?"
   },

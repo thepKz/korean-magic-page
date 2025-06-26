@@ -1,17 +1,19 @@
-import express from 'express';
-import mongoose from 'mongoose';
 import cors from 'cors';
-import helmet from 'helmet';
-import rateLimit from 'express-rate-limit';
 import dotenv from 'dotenv';
+import express from 'express';
+import rateLimit from 'express-rate-limit';
+import helmet from 'helmet';
+import mongoose from 'mongoose';
 
 // Import routes
+import aiRoutes from './routes/ai.js';
 import authRoutes from './routes/auth.js';
+import deckRoutes from './routes/decks.js';
+import flashcardRoutes from './routes/flashcards.js';
 import grammarRoutes from './routes/grammar.js';
-import userRoutes from './routes/user.js';
 import progressRoutes from './routes/progress.js';
 import quizRoutes from './routes/quiz.js';
-import aiRoutes from './routes/ai.js';
+import userRoutes from './routes/user.js';
 
 dotenv.config();
 
@@ -56,6 +58,8 @@ app.use('/api/user', userRoutes);
 app.use('/api/progress', progressRoutes);
 app.use('/api/quiz', quizRoutes);
 app.use('/api/ai', aiRoutes);
+app.use('/api/decks', deckRoutes);
+app.use('/api/flashcards', flashcardRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

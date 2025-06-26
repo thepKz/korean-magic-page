@@ -53,6 +53,8 @@
     "passwords_do_not_match": "Passwords do not match.",
     "error_occurred": "An error occurred.",
     "processing": "Processing...",
+    "logout": "Logout",
+    "login_success": "Login successful!",
     "no_account": "Don't have an account?",
     "have_account": "Already have an account?"
   },

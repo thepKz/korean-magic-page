@@ -16,12 +16,14 @@ export interface GrammarPoint {
   structure: string;
   examples: GrammarExample[];
   usage: string;
+  usageVi?: string;
   level: GrammarLevel;
   topikLevel: number;
   category: string;
   difficulty: number;
   tags: string[];
   explanation: string;
+  explanationVi?: string;
 }
 
 export interface Room {

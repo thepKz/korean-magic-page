@@ -1,7 +1,7 @@
 import express from 'express';
-import UserProgress from '../models/UserProgress.js';
-import Grammar from '../models/Grammar.js';
 import { auth } from '../middleware/auth.js';
+import Grammar from '../models/Grammar.js';
+import UserProgress from '../models/UserProgress.js';
 
 const router = express.Router();
 
@@ -9,7 +9,7 @@ const router = express.Router();
 router.get('/', auth, async (req, res) => {
   try {
     let progress = await UserProgress.findOne({ userId: req.userId })
-      .populate('savedGrammar.grammarId', 'korean english level')
+      .populate('savedGrammar.grammarId', 'korean english vietnamese structure usage usageVi explanation explanationVi examples')
       .populate('studySessions.grammarStudied', 'korean english level');
 
     if (!progress) {

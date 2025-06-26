@@ -1,17 +1,18 @@
 import { motion } from 'framer-motion';
 import {
-  ArrowLeft,
-  BarChart3,
-  BookOpen,
-  CreditCard,
-  Gamepad2,
-  LogIn,
-  Puzzle, ShieldCheck,
-  TrendingUp
+    ArrowLeft,
+    BarChart3,
+    BookOpen,
+    CreditCard,
+    Gamepad2,
+    LogIn,
+    Puzzle, ShieldCheck,
+    TrendingUp
 } from 'lucide-react';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth';
 import { GrammarLevel } from '../types/grammar';
 import LanguageSwitcher from './LanguageSwitcher';
 
@@ -28,6 +29,7 @@ const MuseumEntrance: React.FC<MuseumEntranceProps> = ({
 }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { isAdmin } = useAuth();
 
   const levels = [
     {
@@ -164,7 +166,7 @@ const MuseumEntrance: React.FC<MuseumEntranceProps> = ({
 
         <div className="flex items-center gap-4">
           <LanguageSwitcher />
-          {isLoggedIn && (
+          {isLoggedIn && isAdmin && (
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -178,7 +180,13 @@ const MuseumEntrance: React.FC<MuseumEntranceProps> = ({
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            onClick={onOpenAuth}
+            onClick={() => {
+              if (isLoggedIn) {
+                navigate('/profile');
+              } else {
+                onOpenAuth();
+              }
+            }}
             className="flex items-center gap-2 bg-blue-500/10 backdrop-blur-sm px-4 py-2 rounded-lg border border-blue-400/20 text-blue-300 hover:text-blue-200 hover:bg-blue-500/20 transition-all"
           >
             <LogIn className="w-4 h-4" />
